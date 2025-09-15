@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    container_name: ondas_sqlserver
+    restart: unless-stopped
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong@Password123"
+      MSSQL_PID: "Express"
+    ports:
+      - "8002:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - ondas_network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Password123' -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  ondasapi:
+    container_name: ondas_api
+    restart: unless-stopped
+    image: ondasapi:latest
+    build:
+      context: .
+      dockerfile: OndasAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      - ConnectionStrings__DefaultConnection=Data Source=sqlserver,1433;Initial Catalog=OndasDB;User ID=sa;Password=YourStrong@Password123;TrustServerCertificate=True;MultipleActiveResultSets=true;
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - ondas_network
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver_data:
+
+networks:
+  ondas_network:
+    driver: bridge

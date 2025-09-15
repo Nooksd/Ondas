@@ -1,0 +1,6 @@
+@OndasAPI_HostAddress = http://localhost:5205
+
+GET {{OndasAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
