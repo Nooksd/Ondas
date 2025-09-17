@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace OndasAPI.Models;
+namespace OndasAPI.DTOs;
 
-public class Customer : EntityBase
+public class CustomerDTO
 {
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "Nome é obrigatório")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "Nome deve ter entre 2 e 100 caracteres")]
     public string Name { get; set; } = string.Empty;
@@ -27,10 +28,5 @@ public class Customer : EntityBase
     [RegularExpression(@"^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$", ErrorMessage = "Formato de telefone inválido")]
     public string Phone { get; set; } = string.Empty;
 
-
-    [Required(ErrorMessage = "Endereço é obrigatório")]
-    public int AddressId { get; set; }
-
-    [JsonIgnore]
-    public virtual Address? Address { get; set; }
+    public AddressDTO Address { get; set; } = new();
 }

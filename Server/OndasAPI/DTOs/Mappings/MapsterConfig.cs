@@ -21,5 +21,8 @@ public class MapsterConfig
                             Role = tm.Employee.Role
                         }
                     }).ToList());
+
+        TypeAdapterConfig<Customer, CustomerDTO>.NewConfig();
+        TypeAdapterConfig<Address, AddressDTO>.NewConfig();
     }
 }

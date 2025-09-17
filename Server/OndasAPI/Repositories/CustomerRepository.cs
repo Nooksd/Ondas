@@ -25,4 +25,11 @@ public class CustomerRepository(AppDbContext context) : Repository<Customer>(con
 
         return paginatedCustomers;
     }
+
+    public async Task<Customer?> GetCustomerWithAddressAsync(int id)
+    {
+        return await _context.Set<Customer>()
+            .Include(c => c.Address)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
 }

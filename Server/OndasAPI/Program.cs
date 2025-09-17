@@ -9,6 +9,7 @@ using OndasAPI.Repositories;
 using OndasAPI.Repositories.Interfaces;
 using OndasAPI.Services;
 using OndasAPI.Services.Interfaces;
+using Polly;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -124,17 +125,29 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    try
-    {
-        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
+    var retryPolicy = Policy
+        .Handle<Exception>()
+        .WaitAndRetryAsync(
+            retryCount: 10,
+            sleepDurationProvider: _ => TimeSpan.FromSeconds(30),
+            onRetry: (exception, timeSpan, retryCount, contextPolly) =>
+            {
+                logger.LogWarning(
+                    exception,
+                    "Tentativa {RetryCount} de conectar ao banco. Nova tentativa em {TimeSpan}...",
+                    retryCount, timeSpan);
+            });
+
+    await retryPolicy.ExecuteAsync(async () =>
+    {
+        logger.LogInformation("Aplicando migrations...");
         await context.Database.MigrateAsync();
 
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-
         string[] roleNames = ["Admin", "Editor", "Viewer"];
-
         foreach (var role in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(role))
@@ -143,18 +156,17 @@ using (var scope = app.Services.CreateScope())
             }
         }
 
+        var superAdmEmail = Environment.GetEnvironmentVariable("SUPERADM_EMAIL") ?? "superadm@ondas.com";
+        var superAdmrPassword = Environment.GetEnvironmentVariable("SUPERADM_PASSWORD") ?? "Ondas@2025";
+
         var superAdm = new AppUser { UserName = superAdmEmail, Email = superAdmEmail, EmailConfirmed = true };
 
-        await userManager.CreateAsync(superAdm, superAdmrPassword);
-        var user = await userManager.FindByEmailAsync(superAdmEmail);
-        if (user is not null)
-            await userManager.AddToRoleAsync(user, "Admin");
-
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Erro ao aplicar migrations");
-    }
+        if (await userManager.FindByEmailAsync(superAdmEmail) is null)
+        {
+            await userManager.CreateAsync(superAdm, superAdmrPassword);
+            await userManager.AddToRoleAsync(superAdm, "Admin");
+        }
+    });
 }
 
 if (app.Environment.IsDevelopment())

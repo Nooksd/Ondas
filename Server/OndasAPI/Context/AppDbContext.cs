@@ -30,6 +30,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasForeignKey(s => s.TeamId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Customer>().HasOne(c => c.Address)
+            .WithOne()
+            .HasForeignKey<Customer>(c => c.AddressId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Service>().HasIndex(s => s.ServiceDate);
         modelBuilder.Entity<Service>().HasIndex(s => s.Status);
         modelBuilder.Entity<Customer>().HasIndex(x => x.Cpf).IsUnique();
