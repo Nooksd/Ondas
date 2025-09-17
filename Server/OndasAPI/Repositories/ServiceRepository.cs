@@ -7,7 +7,7 @@ namespace OndasAPI.Repositories;
 
 public class ServiceRepository(AppDbContext context) : Repository<Service>(context), IServiceRepository
 {
-    public async Task<PagedList<Service>> GetServicesAsync(PaginationParameters pagination, ServiceStatus? status, bool order)
+    public async Task<PagedList<Service>> GetServicesAsync(PaginationParameters pagination, ServiceStatus? status)
     {
         var query = GetAll();
 
@@ -16,7 +16,7 @@ public class ServiceRepository(AppDbContext context) : Repository<Service>(conte
             query = query.Where(p => p.Status == status);
         }
 
-        query = order ? query.OrderBy(p => p.ServiceDate) : query.OrderByDescending(p => p.ServiceDate);
+        query = query.OrderBy(p => p.ServiceDate);
 
 
         var paginatedServices = await PagedList<Service>.ToPagedListAsync(query, pagination.Page, pagination.Size);

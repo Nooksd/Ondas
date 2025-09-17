@@ -1,19 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 namespace OndasAPI.Models;
 
 public class TeamMember : EntityBase
 {
     [Required(ErrorMessage = "Equipe é obrigatória")]
-    public int TeamId { get; private set; }
+    public int TeamId { get; set; }
 
     [Required(ErrorMessage = "Funcionário é obrigatório")]
-    public int EmployeeId { get; private set; }
+    public int EmployeeId { get; set; }
+
+    public virtual Employee? Employee { get; set; }
 
     [JsonIgnore]
-    public virtual Employee? Employee { get; private set; }
-
-    [JsonIgnore]
-    public virtual Team? Team { get; private set; }
+    public virtual Team? Team { get; set; }
 }

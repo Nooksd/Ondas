@@ -7,9 +7,40 @@ namespace OndasAPI.Repositories;
 
 public class EmployeeRepository(AppDbContext context) : Repository<Employee>(context), IEmployeeRepository
 {
-    public async Task<PagedList<Employee>> GetEmployeesAsync(PaginationParameters pagination, string q)
+    public async Task<Employee?> ActivateEmployeeAsync(int id)
     {
-        var query = GetAll();
+        var employee = await GetAsync(x => x.Id == id);
+
+        if (employee is null || employee.IsActive)
+        {
+            return null;
+        }
+        employee.Reactivate();
+
+        Update(employee);
+
+        return employee;
+    }
+
+    public async Task<Employee?> DeactivateEmployeeAsync(int id)
+    {
+        var employee = await GetAsync(x => x.Id == id);
+
+        if (employee is null || !employee.IsActive)
+        {
+            return null;
+        }
+
+        employee.Deactivate();
+
+        Update(employee);
+
+        return employee;
+    }
+
+    public async Task<PagedList<Employee>> GetEmployeesAsync(PaginationParameters pagination, string q, bool isActive)
+    {
+        var query = GetAll().Where(x => x.IsActive == isActive);
 
         if (!string.IsNullOrWhiteSpace(q))
         {

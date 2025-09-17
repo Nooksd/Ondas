@@ -8,7 +8,7 @@ namespace OndasAPI.Repositories;
 
 public class CustomerRepository(AppDbContext context) : Repository<Customer>(context), ICustomerRepository
 {
-    public async Task<PagedList<Customer>> GetCustomersAsync(PaginationParameters pagination, string q, bool order)
+    public async Task<PagedList<Customer>> GetCustomersAsync(PaginationParameters pagination, string q)
     {
         var query = GetAll();
 
@@ -19,10 +19,7 @@ public class CustomerRepository(AppDbContext context) : Repository<Customer>(con
             query = query.Where(p => p.Name.Contains(qLower, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        query = query.Include(p => p.Address);
-
-        query = order ? query.OrderBy(p => p.Name) : query.OrderByDescending(p => p.Name);
-
+        query = query.OrderBy(p => p.Name).Include(p => p.Address);
 
         var paginatedCustomers = await PagedList<Customer>.ToPagedListAsync(query, pagination.Page, pagination.Size);
 

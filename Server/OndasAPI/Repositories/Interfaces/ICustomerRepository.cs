@@ -5,5 +5,5 @@ namespace OndasAPI.Repositories.Interfaces;
 
 public interface ICustomerRepository : IRepository<Customer>
 {
-    Task<PagedList<Customer>> GetCustomersAsync(PaginationParameters pagination, string q, bool order);
+    Task<PagedList<Customer>> GetCustomersAsync(PaginationParameters pagination, string q);
 }

@@ -21,7 +21,7 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
     private readonly IConfiguration _configuration = configuration;
 
     [HttpPost("login")]
-    public async Task<ActionResult<ResponseDTO>> Login([FromBody] LoginDTO loginDto)
+    public async Task<ActionResult<TokenDTO>> Login([FromBody] LoginDTO loginDto)
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email!);
         var isPasswordCorrect = await _userManager.CheckPasswordAsync(user!, loginDto.Password!);
@@ -38,12 +38,6 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
             new(ClaimTypes.Email, user.Email!),
             new("email", user.Email!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
-
-        ResponseDTO response = new()
-        {
-            Status = "Success",
-            Message = "Login efetuado com sucesso"
         };
 
         foreach (var userRole in userRoles)
@@ -67,11 +61,17 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
         Response.Cookies.Append("AccessToken", accessTokenString);
         Response.Cookies.Append("RefreshToken", refreshToken);
 
-        return Ok(response);
+        TokenDTO tokenDto = new()
+        {
+            AccessToken = accessTokenString,
+            RefreshToken = refreshToken,
+        };
+
+        return Ok(tokenDto);
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<ResponseDTO>> Register([FromBody] RegisterDTO registerDto)
+    public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
     {
         var userExists = await _userManager.FindByEmailAsync(registerDto.Email!);
 
@@ -94,17 +94,11 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
             return BadRequest(result.Errors);
         }
 
-        ResponseDTO response = new()
-        {
-            Status = "success",
-            Message = "Registro efetuado com sucesso"
-        };
-
-        return CreatedAtAction("login", response);
+        return CreatedAtAction("login", result);
     }
 
     [HttpPost("refresh-token")]
-    public async Task<ActionResult<ResponseDTO>> RefreshToken()
+    public async Task<IActionResult> RefreshToken()
     {
         string? refreshToken = HttpContext.Request.Cookies["RefreshToken"];
         string? accessToken = HttpContext.Request.Cookies["AccessToken"];
@@ -179,7 +173,7 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
 
     [Authorize("Admin")]
     [HttpPost("revoke/{id}")]
-    public async Task<ActionResult<ResponseDTO>> Revoke(int id)
+    public async Task<IActionResult> Revoke(int id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
 
@@ -192,34 +186,13 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
 
         await _userManager.UpdateAsync(user);
 
-        return Ok(new ResponseDTO() { Status = "Sucesso", Message = "Acesso revogado" });
-
-    }
-
-    [Authorize("SuperAdmin")]
-    [HttpPost("create-role")]
-    public async Task<IActionResult> CreateRole(string roleName)
-    {
-        var roleExists = await _roleManager.RoleExistsAsync(roleName);
-
-        if (roleExists)
-        {
-            return Conflict("Esse cargo já existe");
-        }
-
-        var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
-
-        if (!result.Succeeded)
-        {
-            return StatusCode(500);
-        }
-
         return Ok();
+
     }
 
-    [Authorize("SuperAdmin")]
+    [Authorize("Admin")]
     [HttpPost("add-user-to-role")]
-    public async Task<ActionResult<ResponseDTO>> AddUserToRole(string email, string roleName)
+    public async Task<IActionResult> AddUserToRole(string email, string roleName)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null)
@@ -234,12 +207,6 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
             return BadRequest($"Não foi possível adicionar {user.Email} para {roleName}");
         }
 
-        ResponseDTO response = new()
-        {
-            Status = "Success",
-            Message = "Cargo adicionado com sucesso",
-        };
-
-        return Ok(response);
+        return Ok();
     }
 }

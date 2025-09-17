@@ -45,6 +45,7 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Admin", policy => policy.RequireRole("Admin"))
     .AddPolicy("SuperAdmin", policy => policy.RequireClaim(ClaimTypes.Email, superAdmEmail));
 
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,6 +74,18 @@ builder.Services.AddAuthentication(options =>
             if (!string.IsNullOrEmpty(accessToken))
             {
                 context.Token = accessToken;
+            }
+            else
+            {
+                if (context.Request.Headers.TryGetValue("Authorization", out var authHeaders))
+                {
+                    var authHeader = authHeaders.FirstOrDefault();
+                    if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        context.Token = authHeader["Bearer ".Length..].Trim();
+                    }
+                }
+
             }
             return Task.CompletedTask;
         }
@@ -133,6 +146,10 @@ using (var scope = app.Services.CreateScope())
         var superAdm = new AppUser { UserName = superAdmEmail, Email = superAdmEmail, EmailConfirmed = true };
 
         await userManager.CreateAsync(superAdm, superAdmrPassword);
+        var user = await userManager.FindByEmailAsync(superAdmEmail);
+        if (user is not null)
+            await userManager.AddToRoleAsync(user, "Admin");
+
     }
     catch (Exception ex)
     {

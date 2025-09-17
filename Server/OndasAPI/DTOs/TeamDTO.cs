@@ -1,13 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using OndasAPI.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace OndasAPI.Models;
+namespace OndasAPI.DTOs;
 
-public class Team : EntityBase
+public class TeamDTO
 {
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "Nome da equipe é obrigatório")]
     [StringLength(50, MinimumLength = 2, ErrorMessage = "Nome deve ter entre 2 e 50 caracteres")]
     public string Name { get; set; } = string.Empty;
 
-    public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
+    public bool IsActive { get; set; } = true;
+
+    public List<TeamMemberDTO> TeamMembers { get; set; } = [];
 }
