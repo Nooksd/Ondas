@@ -45,8 +45,7 @@ public class ServiceRepository(AppDbContext context) : Repository<Service>(conte
         return await _context.Set<Service>()
             .Include(s => s.Customer)
             .Include(s => s.Team)
-            .Where(s => s.PaymentDueDate.HasValue
-                        && s.PaymentDueDate.Value.Date == dueDate.Date
+            .Where(s => s.PaymentDueDate == dueDate.Date
                         && s.Status != ServiceStatus.Concluido)
             .ToListAsync();
     }

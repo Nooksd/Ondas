@@ -8,6 +8,7 @@ public class MapsterConfig
     public static void RegisterMappings()
     {
         TypeAdapterConfig<Employee, EmployeeDTO>.NewConfig();
+        TypeAdapterConfig<EmployeeDTO, Employee>.NewConfig().IgnoreNullValues(true);
 
         TypeAdapterConfig<Team, TeamDTO>.NewConfig()
             .Map(dest => dest.TeamMembers, src => src.TeamMembers == null ? new List<TeamMemberDTO>()
@@ -21,15 +22,26 @@ public class MapsterConfig
                             Role = tm.Employee.Role
                         }
                     }).ToList());
+        TypeAdapterConfig<TeamDTO, Team>.NewConfig().IgnoreNullValues(true);
 
         TypeAdapterConfig<Customer, CustomerDTO>.NewConfig();
+        TypeAdapterConfig<CustomerDTO, Customer>.NewConfig().IgnoreNullValues(true);
+
         TypeAdapterConfig<Address, AddressDTO>.NewConfig();
+        TypeAdapterConfig<AddressDTO, Address>.NewConfig().IgnoreNullValues(true);
 
         TypeAdapterConfig<Service, ServiceDTO>.NewConfig()
             .Map(dest => dest.CustomerName, src => src.Customer != null ? src.Customer.Name : null)
             .Map(dest => dest.TeamName, src => src.Team != null ? src.Team.Name : null)
             .Map(dest => dest.PaymentDate, src => src.PaymentDate == default ? (DateTime?)null : src.PaymentDate);
-
         TypeAdapterConfig<ServiceDTO, Service>.NewConfig().IgnoreNullValues(true);
+
+        TypeAdapterConfig<AppUser, UserDTO>.NewConfig()
+            .Map(dest => dest.Username, src => src.UserName)
+            .Map(dest => dest.Email, src => src.Email);
+        TypeAdapterConfig<UserDTO, AppUser>.NewConfig()
+            .Map(dest => dest.UserName, src => src.Username)
+            .Map(dest => dest.Email, src => src.Email)
+            .Ignore(dest => dest.PasswordHash!);
     }
 }

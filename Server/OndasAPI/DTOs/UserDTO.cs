@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OndasAPI.DTOs;
 
-public class RegisterDTO
+public class UserDTO
 {
+    public string? Id { get; set; }
+
     [Required(ErrorMessage = "Username is required")]
     public string? Username { get; set; }
 
@@ -15,4 +17,6 @@ public class RegisterDTO
     [Required(ErrorMessage = "Password is required")]
     [ValidPassword]
     public string? Password { get; set; }
+
+    public string[]? Roles { get; set; }
 }

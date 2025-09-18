@@ -70,33 +70,6 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
         return Ok(tokenDto);
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
-    {
-        var userExists = await _userManager.FindByEmailAsync(registerDto.Email!);
-
-        if (userExists is not null)
-        {
-            return Conflict("Usuário já registrado");
-        }
-
-        AppUser user = new()
-        {
-            Email = registerDto.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = registerDto.Username,
-        };
-
-        var result = await _userManager.CreateAsync(user, registerDto.Password!);
-
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
-
-        return CreatedAtAction("login", result);
-    }
-
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken()
     {
@@ -167,45 +140,6 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
 
         Response.Cookies.Delete("AccessToken");
         Response.Cookies.Delete("RefreshToken");
-
-        return Ok();
-    }
-
-    [Authorize("Admin")]
-    [HttpPost("revoke/{id}")]
-    public async Task<IActionResult> Revoke(int id)
-    {
-        var user = await _userManager.FindByIdAsync(id.ToString());
-
-        if (user == null)
-        {
-            return BadRequest("Usuário inexistente");
-        }
-
-        user.RefreshToken = null;
-
-        await _userManager.UpdateAsync(user);
-
-        return Ok();
-
-    }
-
-    [Authorize("Admin")]
-    [HttpPost("add-user-to-role")]
-    public async Task<IActionResult> AddUserToRole(string email, string roleName)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user is null)
-        {
-            return BadRequest("User não existe");
-        }
-
-        var result = await _userManager.AddToRoleAsync(user, roleName);
-
-        if (!result.Succeeded)
-        {
-            return BadRequest($"Não foi possível adicionar {user.Email} para {roleName}");
-        }
 
         return Ok();
     }
