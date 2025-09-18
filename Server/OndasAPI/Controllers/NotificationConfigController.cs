@@ -1,6 +1,7 @@
 ﻿// Controllers/NotificationConfigController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using OndasAPI.Models;
 using OndasAPI.Repositories.Interfaces;
 using OndasAPI.Services.Interfaces;
@@ -48,7 +49,20 @@ public class NotificationConfigController(IUnitOfWork unitOfWork, IEmailSender e
 
         if (config.SendEmails && !string.IsNullOrWhiteSpace(email))
         {
-            await _emailSender.SendEmailAsync(email, "Teste", "Teste de cobrança", "<p>Teste OK</p>");
+            var msg = new MimeMessage();
+
+            msg.To.Add(new MailboxAddress("teste", email));
+            msg.Subject = "teste";
+
+            var builder = new BodyBuilder
+            {
+                HtmlBody = "<p>Este é um email de teste enviado pela API Ondas.</p>",
+                TextBody = "Este é um email de teste enviado pela API Ondas."
+            };
+
+            msg.Body = builder.ToMessageBody();
+
+            await _emailSender.SendEmailAsync(msg);
         }
 
         return Ok(new { ok = true });

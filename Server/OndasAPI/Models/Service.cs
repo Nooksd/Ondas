@@ -35,7 +35,7 @@ public class Service : EntityBase
 
     [Required(ErrorMessage = "Data de pagamento é obrigatória")]
     [FutureDate]
-    public DateTime? PaymentDueDate { get; set; }
+    public DateTime PaymentDueDate { get; set; }
 
 
     [StringLength(500, MinimumLength = 10, ErrorMessage = "Descrição deve ter entre 10 e 500 caracteres")]
