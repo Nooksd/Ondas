@@ -8,6 +8,8 @@ public interface IUnitOfWork
     IServiceRepository ServiceRepository { get; }
     ITeamMemberRepository TeamMemberRepository { get; }
     ITeamRepository TeamRepository { get; }
+    INotificationConfigRepository NotificationConfigRepository { get; }
+    INotificationLogRepository NotificationLogRepository { get; }
 
     Task CommitAsync();
 }

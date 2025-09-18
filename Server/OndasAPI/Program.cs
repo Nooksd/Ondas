@@ -107,6 +107,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     });
 });
 
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
@@ -116,9 +117,18 @@ builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 
+builder.Services.AddScoped<INotificationConfigRepository, NotificationConfigRepository>();
+builder.Services.AddScoped<INotificationLogRepository, NotificationLogRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddScoped<ISmsSender, TwilioSmsSender>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddHostedService<NotificationBackgroundService>();
 
 var app = builder.Build();
 

@@ -11,6 +11,8 @@ public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
     private IServiceRepository? _serviceRepository;
     private ITeamMemberRepository? _teamMemberRepository;
     private ITeamRepository? _teamRepository;
+    private INotificationConfigRepository? _notificationConfigRepository;
+    private INotificationLogRepository? _notificationLogRepository;
 
     public AppDbContext _context = appDbContext;
 
@@ -60,6 +62,22 @@ public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
         get
         {
             return _teamRepository = _teamRepository ?? new TeamRepository(_context);
+        }
+    }
+
+    public INotificationConfigRepository NotificationConfigRepository
+    {
+        get
+        {
+            return _notificationConfigRepository = _notificationConfigRepository ?? new NotificationConfigRepository(_context);
+        }
+    }
+
+    public INotificationLogRepository NotificationLogRepository
+    {
+        get
+        {
+            return _notificationLogRepository = _notificationLogRepository ?? new NotificationLogRepository(_context);
         }
     }
 

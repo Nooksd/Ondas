@@ -39,4 +39,16 @@ public class ServiceRepository(AppDbContext context) : Repository<Service>(conte
             .Include(s => s.Team)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
+
+    public async Task<List<Service>> GetServicesByDueDateAsync(DateTime dueDate)
+    {
+        return await _context.Set<Service>()
+            .Include(s => s.Customer)
+            .Include(s => s.Team)
+            .Where(s => s.PaymentDueDate.HasValue
+                        && s.PaymentDueDate.Value.Date == dueDate.Date
+                        && s.Status != ServiceStatus.Concluido)
+            .ToListAsync();
+    }
+
 }
