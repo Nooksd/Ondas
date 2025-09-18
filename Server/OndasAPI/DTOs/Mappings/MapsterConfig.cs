@@ -24,5 +24,12 @@ public class MapsterConfig
 
         TypeAdapterConfig<Customer, CustomerDTO>.NewConfig();
         TypeAdapterConfig<Address, AddressDTO>.NewConfig();
+
+        TypeAdapterConfig<Service, ServiceDTO>.NewConfig()
+            .Map(dest => dest.CustomerName, src => src.Customer != null ? src.Customer.Name : null)
+            .Map(dest => dest.TeamName, src => src.Team != null ? src.Team.Name : null)
+            .Map(dest => dest.PaymentDate, src => src.PaymentDate == default ? (DateTime?)null : src.PaymentDate);
+
+        TypeAdapterConfig<ServiceDTO, Service>.NewConfig().IgnoreNullValues(true);
     }
 }
