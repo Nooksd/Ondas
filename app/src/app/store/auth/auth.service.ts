@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LoginDTO } from './auth.state';
+import { ApiHttpClient } from '../../core/api-http-client';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly baseUrl = 'Auth';
+
+  constructor(private http: ApiHttpClient) {}
+
+  login(credentials: LoginDTO): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/login`, credentials);
+  }
+
+  refreshToken(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/refresh-token`, {});
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/logout`, {});
+  }
+}
