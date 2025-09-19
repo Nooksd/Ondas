@@ -25,3 +25,9 @@ containers/
 *~
 .vscode/
 .vscode/*
+
+node_modules/
+dist/
+
+.env
+secrets/

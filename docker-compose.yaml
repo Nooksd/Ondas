@@ -1,0 +1,46 @@
+services:
+  sqlserver:
+    container_name: ondas_sqlserver
+    restart: unless-stopped
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - ondas_network
+
+  ondasapi:
+    container_name: ondas_api
+    restart: unless-stopped
+    image: ondasapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Data Source=sqlserver,1433;Initial Catalog=OndasDB;User ID=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - SUPERADM_EMAIL=superadm@ondas.com
+      - SUPERADM_PASSWORD=${SUPERADM_PASSWORD}
+      - JWT__SecretKey=${JWT_SECRET}
+      - JWT__ValidAudience=ondas-client
+      - JWT__ValidIssuer=ondas-server
+    ports:
+      - "8080:8080"
+    networks:
+      - ondas_network
+    depends_on:
+      - sqlserver
+
+volumes:
+  sqlserver_data:
+
+networks:
+  ondas_network:
+    driver: bridge
