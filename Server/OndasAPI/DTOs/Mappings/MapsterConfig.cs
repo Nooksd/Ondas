@@ -37,10 +37,10 @@ public class MapsterConfig
         TypeAdapterConfig<ServiceDTO, Service>.NewConfig().IgnoreNullValues(true);
 
         TypeAdapterConfig<AppUser, UserDTO>.NewConfig()
-            .Map(dest => dest.Username, src => src.UserName)
+            .Map(dest => dest.UserName, src => src.UserName)
             .Map(dest => dest.Email, src => src.Email);
         TypeAdapterConfig<UserDTO, AppUser>.NewConfig()
-            .Map(dest => dest.UserName, src => src.Username)
+            .Map(dest => dest.UserName, src => src.UserName)
             .Map(dest => dest.Email, src => src.Email)
             .Ignore(dest => dest.PasswordHash!);
     }

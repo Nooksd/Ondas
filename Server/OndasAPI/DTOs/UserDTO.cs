@@ -8,7 +8,7 @@ public class UserDTO
     public string? Id { get; set; }
 
     [Required(ErrorMessage = "Username is required")]
-    public string? Username { get; set; }
+    public string? UserName { get; set; }
 
     [EmailAddress]
     [Required(ErrorMessage = "Email is required")]

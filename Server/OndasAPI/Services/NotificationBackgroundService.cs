@@ -6,7 +6,7 @@ public class NotificationBackgroundService(IServiceProvider provider, ILogger<No
 {
     private readonly IServiceProvider _provider = provider;
     private readonly ILogger<NotificationBackgroundService> _logger = logger;
-    private readonly TimeSpan _delay = TimeSpan.FromMinutes(2);
+    private readonly TimeSpan _delay = TimeSpan.FromMinutes(30);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -28,9 +28,12 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_URLS=http://+:8080;https://+:8081
-      - CONNECTIONSTRING=Data Source=sqlserver,1433;Initial Catalog=OndasDB;User ID=sa;Password=YourStrong@Password123;TrustServerCertificate=True;MultipleActiveResultSets=true;
+      - ConnectionStrings__DefaultConnection=Data Source=sqlserver,1433;Initial Catalog=OndasDB;User ID=sa;Password=YourStrong@Password123;TrustServerCertificate=True;MultipleActiveResultSets=true;
       - SUPERADM_EMAIL=superadm@ondas.com
       - SUPERADM_PASSWORD=Ondas@2025
+      - JWT__SecretKey=ASIOU3nrsdojf0ej940u98h98-WEF8#peidei4QWy-&*y#equHAHAsJH0Q9JHEQID
+      - JWT__ValidAudience=ondas-client
+      - JWT__ValidIssuer=ondas-server
     ports:
       - "8080:8080"
       - "8081:8081"

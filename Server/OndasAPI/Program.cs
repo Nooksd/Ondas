@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -116,6 +117,7 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 builder.Services.AddScoped<INotificationConfigRepository, NotificationConfigRepository>();
 builder.Services.AddScoped<INotificationLogRepository, NotificationLogRepository>();
@@ -181,6 +183,7 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseHttpsRedirection();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
@@ -188,8 +191,14 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
+else
+{
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
+}
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 

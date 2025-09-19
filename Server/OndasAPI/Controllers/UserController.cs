@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using OndasAPI.DTOs;
 using OndasAPI.Models;
 using OndasAPI.Pagination;
+using System.Security.Claims;
 
 namespace OndasAPI.Controllers;
 
@@ -128,8 +129,8 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
         if (user is null)
             return NotFound("Usuário não encontrado");
 
-        if (!string.IsNullOrWhiteSpace(userDto.Username))
-            user.UserName = userDto.Username;
+        if (!string.IsNullOrWhiteSpace(userDto.UserName))
+            user.UserName = userDto.UserName;
 
         if (!string.IsNullOrWhiteSpace(userDto.Email))
             user.Email = userDto.Email;
@@ -166,7 +167,9 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var currentUser = await _userManager.GetUserAsync(User);
+        var user = User;
+
+        var currentUser = await _userManager.FindByEmailAsync(user.FindFirstValue(ClaimTypes.Email)!);
         if (currentUser is null)
             return Unauthorized();
 

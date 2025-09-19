@@ -32,6 +32,9 @@ public class Service : EntityBase
     [Required(ErrorMessage = "Data do serviço é obrigatória")]
     public DateTime ServiceDate { get; set; }
 
+    [Required(ErrorMessage = "Duração do serviço é obrigatória")]
+    public TimeSpan ServiceDuration { get; set; }
+
 
     [Required(ErrorMessage = "Data de pagamento é obrigatória")]
     [FutureDate]
