@@ -30,6 +30,14 @@ builder.Services.AddControllers(options =>
     options.JsonSerializerOptions.WriteIndented = true;
 }).AddNewtonsoftJson();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -197,6 +205,7 @@ else
     {
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
     });
+    app.UseCors("frontend");
 }
 
 app.UseAuthentication();

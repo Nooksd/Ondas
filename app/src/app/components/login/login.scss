@@ -1,0 +1,150 @@
+@use 'tailwindcss';
+
+.login-container {
+  @apply min-h-screen flex items-center justify-center p-4;
+  background-color: var(--color-primary-4);
+}
+
+.login-card {
+  @apply w-full flex overflow-hidden shadow-2xl;
+  box-shadow: 0 3px 7px 0 rgba(23, 109, 198, 0.2);
+  max-width: 1300px;
+  min-height: 700px;
+  border-radius: 40px;
+  background-color: var(--color-background);
+
+  @apply lg:flex-row flex-col;
+}
+
+.login-banner {
+  @apply relative overflow-hidden;
+  @apply lg:w-1/2 w-full lg:h-auto h-64;
+
+  .banner-image {
+    @apply w-full h-full object-cover;
+  }
+}
+
+.login-form-container {
+  @apply flex items-start justify-center;
+  @apply lg:w-1/2 w-full;
+  @apply p-8 lg:p-12;
+}
+
+.login-form-content {
+  @apply w-full max-w-md;
+}
+
+.logo-container {
+  @apply flex justify-center mb-12;
+
+  .logo {
+    @apply w-35 h-35;
+    margin-bottom: 10%;
+  }
+}
+
+.login-form {
+  @apply space-y-10;
+}
+
+.form-group {
+  @apply relative;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 rounded-2xl;
+  @apply text-base;
+  @apply transition-all duration-200;
+  @apply outline-none;
+  border: 2px solid var(--color-primary-3);
+  color: var(--color-primary-1);
+
+  &::placeholder {
+    color: var(--color-primary-2);
+    @apply opacity-70;
+  }
+
+  &:focus {
+    border-color: var(--color-primary-2);
+    @apply shadow-md;
+  }
+
+  &:hover {
+    border-color: var(--color-primary-2);
+  }
+}
+
+.password-wrapper {
+  @apply relative;
+
+  .password-toggle {
+    @apply absolute right-3 top-1/2 transform -translate-y-1/2;
+    @apply p-1 rounded;
+    @apply transition-all duration-200;
+    @apply cursor-pointer;
+    color: var(--color-primary-2);
+    background: transparent;
+
+    &:hover {
+      color: var(--color-primary-1);
+      @apply bg-gray-100;
+    }
+  }
+}
+
+.ng-touched {
+  .form-input.ng-invalid {
+    border-color: var(--color-error);
+  }
+}
+
+.login-button {
+  @apply w-full py-3 px-4 rounded-2xl;
+  @apply font-medium text-white;
+  @apply transition-all duration-200;
+  @apply transform;
+  background-color: var(--color-primary-1);
+
+  &:hover {
+    @apply shadow-lg -translate-y-0.5;
+    background-color: var(--color-primary-2);
+  }
+
+  &:active {
+    @apply translate-y-0 shadow-md;
+  }
+}
+
+@media (max-width: 1024px) {
+  .login-card {
+    max-width: 100%;
+    min-height: auto;
+  }
+
+  .login-form-container {
+    @apply py-8;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-form-container {
+    @apply p-6;
+  }
+
+  .logo-container {
+    @apply mb-8;
+
+    .logo {
+      @apply w-20 h-20;
+    }
+  }
+
+  .form-input {
+    @apply text-sm py-2.5;
+  }
+
+  .login-button {
+    @apply py-2.5 text-sm;
+  }
+}

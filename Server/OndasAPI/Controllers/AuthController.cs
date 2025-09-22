@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OndasAPI.DTOs;
@@ -67,7 +68,13 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
             RefreshToken = refreshToken,
         };
 
-        return Ok(tokenDto);
+        var response = new
+        {
+            token = tokenDto,
+            user = user.Adapt<UserDTO>(),
+        };
+
+        return Ok(response);
     }
 
     [HttpPost("refresh-token")]
@@ -116,6 +123,27 @@ public class AuthController(ITokenService tokenService, UserManager<AppUser> use
         Response.Cookies.Append("RefreshToken", newRefreshToken);
 
         return Ok();
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> Me()
+    {
+        var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("Email claim not found");
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var userDto = user.Adapt<UserDTO>();
+
+        return Ok(userDto);
     }
 
     [Authorize]

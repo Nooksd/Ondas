@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import {
   HttpEvent,
   HttpHandler,
@@ -25,14 +25,18 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshSubject = new BehaviorSubject<boolean | null>(null);
 
-  constructor(private injector: Injector, private store: Store) {}
+  injector = inject(Injector);
+  store = inject(Store);
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const reqWithCreds = req.clone({ withCredentials: true });
 
     return next.handle(reqWithCreds).pipe(
       catchError((error: HttpErrorResponse) => {
-        const isAuthEndpoint = req.url.endsWith('refresh-token') || req.url.endsWith('login');
+        const isAuthEndpoint =
+          req.url.includes('refresh-token') ||
+          req.url.includes('login') ||
+          req.url.includes('logout');
 
         if (error.status === 401 && !isAuthEndpoint) {
           return this.handle401Error(reqWithCreds, next);

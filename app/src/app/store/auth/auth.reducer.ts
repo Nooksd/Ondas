@@ -11,11 +11,12 @@ export const authReducer = createReducer(
     error: null,
   })),
 
-  on(AuthActions.loginSuccess, (state) => ({
+  on(AuthActions.loginSuccess, (state, { user }) => ({
     ...state,
     loading: false,
     isAuthenticated: true,
     error: null,
+    user,
   })),
 
   on(AuthActions.loginFailure, (state, { error }) => ({
@@ -23,6 +24,7 @@ export const authReducer = createReducer(
     loading: false,
     error,
     isAuthenticated: false,
+    user: null,
   })),
 
   on(AuthActions.refreshToken, (state) => ({
@@ -43,27 +45,29 @@ export const authReducer = createReducer(
     loading: false,
     error,
     isAuthenticated: false,
-    tokens: null,
+    user: null,
   })),
 
-  on(AuthActions.checkAuth, (state) => ({
+  on(AuthActions.getMe, (state) => ({
     ...state,
     loading: true,
     error: null,
   })),
 
-  on(AuthActions.checkAuthSuccess, (state, { isAuthenticated }) => ({
+  on(AuthActions.getMeSuccess, (state, { user }) => ({
     ...state,
     loading: false,
-    isAuthenticated,
+    isAuthenticated: true,
     error: null,
+    user,
   })),
 
-  on(AuthActions.checkAuthFailure, (state, { error }) => ({
+  on(AuthActions.getMeFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
     isAuthenticated: false,
+    user: null,
   })),
 
   on(AuthActions.logout, (state) => ({

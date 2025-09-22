@@ -1,0 +1,101 @@
+<div class="ui-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <a routerLink="/dashboard">
+          <img src="/assets/logo-name.svg" alt="Logo" class="logo" />
+        </a>
+      </div>
+    </div>
+
+    <img src="/assets/line.svg" alt="Line" class="divider" />
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="nav-item-active" class="nav-item">
+        <div class="icon">
+          <div class="icon-home"></div>
+        </div>
+        <span class="nav-text">Dashboard</span>
+      </a>
+
+      <a routerLink="/servicos" routerLinkActive="nav-item-active" class="nav-item">
+        <div class="icon">
+          <div class="icon-bucket"></div>
+        </div>
+        <span class="nav-text">Serviços</span>
+      </a>
+
+      <a routerLink="/clientes" routerLinkActive="nav-item-active" class="nav-item">
+        <div class="icon">
+          <div class="icon-user"></div>
+        </div>
+        <span class="nav-text">Clientes</span>
+      </a>
+
+      <div class="nav-section">
+        <span class="nav-section-title">Empresa</span>
+
+        <a routerLink="/funcionarios" routerLinkActive="nav-item-active" class="nav-item">
+          <div class="icon">
+            <div class="icon-employee"></div>
+          </div>
+          <span class="nav-text">Funcionários</span>
+        </a>
+
+        <a routerLink="/times" routerLinkActive="nav-item-active" class="nav-item">
+          <div class="icon">
+            <div class="icon-team"></div>
+          </div>
+          <span class="nav-text">Times</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-title">App</span>
+
+        <a routerLink="/usuarios" routerLinkActive="nav-item-active" class="nav-item">
+          <div class="icon">
+            <div class="icon-user"></div>
+          </div>
+          <span class="nav-text">Usuários</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a routerLink="/settings" routerLinkActive="nav-item-active" class="nav-item">
+        <div class="icon">
+          <div class="icon-settings"></div>
+        </div>
+        <span class="nav-text">Configurações</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="header">
+      <div class="header-left">
+        <div class="breadcrumb-title">
+          <nav class="breadcrumb">
+            <span class="breadcrumb-item">Pages</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Dashboard</span>
+          </nav>
+          <span class="title">Dashboard</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="header-icon-btn"></button>
+
+        <button class="user-profile">
+          <img src="/assets/profile.svg" alt="Logo" class="logo" />
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

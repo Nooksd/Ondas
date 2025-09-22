@@ -1,1 +1,62 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-banner">
+      <img src="/assets/image1.png" alt="Pool cleaning service" class="banner-image" />
+    </div>
+
+    <div class="login-form-container">
+      <div class="login-form-content">
+        <div class="logo-container">
+          <img src="/assets/logo.svg" alt="Logo" class="logo" />
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+          <div class="form-group">
+            <input
+              type="email"
+              id="email"
+              placeholder="Email"
+              class="form-input"
+              formControlName="email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <div class="password-wrapper">
+              <input
+                [type]="passwordVisible() ? 'text' : 'password'"
+                id="password"
+                placeholder="Password"
+                class="form-input"
+                formControlName="password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePassword()"
+                [attr.aria-pressed]="passwordVisible()"
+                aria-label="Toggle password visibility"
+              >
+                @if(passwordVisible()) {
+                <div class="icon-eye-open"></div>
+                } @else {
+                <div class="icon-eye-closed"></div>
+                }
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="login-button">
+            @if (loading()) {
+            <span>Carregando...</span>
+            } @else {
+            <span>Login</span>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
