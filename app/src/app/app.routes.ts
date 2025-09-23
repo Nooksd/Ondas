@@ -31,34 +31,42 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: Dashboard,
+        data: { breadcrumb: 'Dashboard', title: 'Dashboard' },
       },
       {
         path: 'servicos',
         component: Services,
+        data: { breadcrumb: 'Serviços', title: 'Serviços' },
       },
       {
         path: 'clientes',
         component: Customers,
+        data: { breadcrumb: 'Clientes', title: 'Clientes' },
       },
       {
         path: 'funcionarios',
         component: Employees,
+        data: { breadcrumb: 'Funcionários', title: 'Funcionários' },
       },
       {
         path: 'times',
         component: Teams,
+        data: { breadcrumb: 'Times', title: 'Times' },
       },
       {
         path: 'usuarios',
         component: Users,
+        data: { breadcrumb: 'Usuários', title: 'Usuários' },
       },
       {
-        path: 'profile',
+        path: 'perfil',
         component: Profile,
+        data: { breadcrumb: 'Perfil', title: 'Perfil' },
       },
       {
-        path: 'settings',
+        path: 'configuracoes',
         component: Settings,
+        data: { breadcrumb: 'Configurações', title: 'Configurações' },
       },
     ],
   },

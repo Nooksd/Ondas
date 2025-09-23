@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgToastService } from 'ng-angular-popup';
 import { Store } from '@ngrx/store';
 import { login } from 'app/store/auth/auth.actions';
 import { selectAuthLoading } from 'app/store/auth/auth.selectors';
@@ -23,7 +22,6 @@ export class Login {
   }
 
   private fb = inject(FormBuilder);
-  private toast = inject(NgToastService);
   private store = inject(Store);
 
   passwordVisible = signal(false);

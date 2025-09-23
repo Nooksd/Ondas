@@ -13,14 +13,12 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideNgToast } from 'ng-angular-popup';
 import { AuthInterceptor } from './store/auth/auth.interceptor';
+import { provideHotToastConfig } from '@ngxpert/hot-toast';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideAnimations(),
-    provideNgToast(),
+    provideHotToastConfig(),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -35,5 +33,6 @@ export const appConfig: ApplicationConfig = {
       useClass: AuthInterceptor,
       multi: true,
     },
+    provideHotToastConfig(),
   ],
 };

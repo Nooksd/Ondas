@@ -1,3 +1,4 @@
+@use '@ngxpert/hot-toast/styles';
 @use 'tailwindcss';
 
 :root {
@@ -16,20 +17,4 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-}
-
-.shadow-md {
-  @apply shadow-md;
-
-  box-shadow: 0 3px 7px 0 rgba(23, 109, 198, 0.2);
-}
-
-.shadow-lg {
-  @apply shadow-lg;
-
-  box-shadow: 0 3px 7px 0 rgba(23, 109, 198, 0.2);
-}
-
-.shadow-2xl {
-  box-shadow: 0 3px 7px 0 rgba(23, 109, 198, 0.2);
 }

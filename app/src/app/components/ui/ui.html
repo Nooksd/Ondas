@@ -63,7 +63,7 @@
     </nav>
 
     <div class="sidebar-bottom">
-      <a routerLink="/settings" routerLinkActive="nav-item-active" class="nav-item">
+      <a routerLink="/configuracoes" routerLinkActive="nav-item-active" class="nav-item">
         <div class="icon">
           <div class="icon-settings"></div>
         </div>
@@ -79,18 +79,34 @@
           <nav class="breadcrumb">
             <span class="breadcrumb-item">Pages</span>
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">Dashboard</span>
+            <span class="breadcrumb-current">{{ breadcrumb() }}</span>
           </nav>
-          <span class="title">Dashboard</span>
+          <span class="title">{{ title() }}</span>
         </div>
       </div>
 
       <div class="header-right">
-        <button class="header-icon-btn"></button>
+        <div class="profile-container">
+          <button class="user-profile" (click)="toggleProfileMenu()">
+            <img src="/assets/profile.svg" alt="Avatar" class="profile-avatar" />
+          </button>
 
-        <button class="user-profile">
-          <img src="/assets/profile.svg" alt="Logo" class="logo" />
-        </button>
+          <div class="profile-menu" [class.profile-menu-open]="profileMenuOpen()">
+            <button class="profile-menu-item" (click)="onProfileClick()">
+              <div class="profile-menu-icon">
+                <div class="icon-user"></div>
+              </div>
+              <span class="profile-menu-text">Perfil</span>
+            </button>
+
+            <button class="profile-menu-item" (click)="onLogoutClick()">
+              <div class="profile-menu-icon">
+                <div class="icon-exit"></div>
+              </div>
+              <span class="profile-menu-text">Sair</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 

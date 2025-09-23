@@ -143,12 +143,54 @@
   &-right {
     @apply flex items-center space-x-3;
 
-    .header-icon-btn {
-      @apply p-2 rounded-lg;
-      @apply transition-colors duration-200;
+    .profile-container {
+      @apply relative;
+    }
 
-      svg {
-        @apply text-gray-600;
+    .profile-menu {
+      @apply absolute right-0 top-full mt-2;
+      @apply bg-white shadow-md rounded-lg;
+      @apply w-48;
+      @apply opacity-0 invisible transform scale-95;
+      @apply transition-all duration-200 ease-in-out;
+      @apply z-50;
+
+      &-open {
+        @apply opacity-100 visible transform scale-100;
+      }
+
+      &-item {
+        @apply w-full flex items-center px-4 py-3;
+        @apply text-left transition-colors duration-200;
+        color: var(--color-primary-1);
+
+        &:first-child {
+          @apply rounded-t-lg;
+        }
+
+        &:last-child {
+          @apply rounded-b-lg;
+        }
+
+        &:hover {
+          background-color: var(--color-background-secondary);
+        }
+      }
+
+      &-icon {
+        @apply w-8 h-8 flex items-center justify-center mr-3;
+        @apply rounded-md;
+
+        .icon-user,
+        .icon-logout {
+          @apply w-4 h-4;
+          color: var(--color-primary-1);
+        }
+      }
+
+      &-text {
+        @apply text-sm font-medium;
+        color: var(--color-primary-1);
       }
     }
 

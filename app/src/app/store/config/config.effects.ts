@@ -2,9 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import * as AuthActions from './auth.actions';
-import { AuthService } from './auth.service';
-import { User } from './auth.state';
+import * as AuthActions from './config.actions';
+import { AuthService } from './config.service';
+import { User } from './config.state';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngxpert/hot-toast';
 

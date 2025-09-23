@@ -68,7 +68,6 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.refreshSubject.next(false);
           this.store.dispatch(AuthActions.refreshTokenFailure({ error: err }));
-          this.store.dispatch(AuthActions.logout());
           return throwError(() => err);
         })
       );
