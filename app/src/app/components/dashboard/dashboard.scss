@@ -1,0 +1,172 @@
+@use 'tailwindcss';
+
+.dashboard-cards {
+  @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8;
+}
+
+.dashboard-card {
+  @apply bg-white rounded-2xl p-6 shadow-sm;
+  border: 1px solid #f1f5f9;
+
+  .card-content {
+    @apply flex items-center justify-between;
+  }
+
+  .card-info {
+    @apply flex flex-col;
+  }
+
+  .card-label {
+    @apply text-sm font-medium mb-2;
+    color: var(--color-primary-2);
+  }
+
+  .card-value-container {
+    @apply flex items-center gap-3;
+  }
+
+  .card-value {
+    @apply text-2xl font-bold;
+    color: var(--color-primary-1);
+  }
+
+  .card-icon {
+    @apply w-14 h-14 flex items-center justify-center rounded-2xl shadow-md;
+    background-color: #2563eb;
+
+    div[class^='icon-'] {
+      @apply w-6 h-6 flex items-center justify-center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .icon-money {
+      font-size: 45px;
+    }
+  }
+}
+
+.dashboard-charts {
+  @apply grid grid-cols-1 xl:grid-cols-4 gap-6;
+}
+
+.chart-employees {
+  @apply row-span-2 space-y-6;
+}
+
+.chart-heatmap {
+  @apply col-span-2;
+}
+
+.chart-overview {
+  @apply col-span-3;
+}
+
+.chart-container {
+  @apply bg-white rounded-2xl p-6 shadow-sm;
+  width: 100%;
+  border: 1px solid #f1f5f9;
+}
+
+.chart-wrapper {
+  height: 600px;
+}
+
+.chart-header {
+  @apply mb-6;
+
+  .chart-title-section {
+    @apply flex flex-col;
+  }
+
+  .chart-title {
+    @apply text-lg font-semibold mb-1;
+    color: var(--color-primary-1);
+  }
+}
+
+.chart-content {
+  @apply w-full;
+}
+
+.heatmap-placeholder {
+  @apply flex flex-col items-center;
+
+  .heatmap-grid {
+    @apply space-y-2 mb-4;
+  }
+
+  .heatmap-row {
+    @apply flex gap-2;
+  }
+
+  .heatmap-cell {
+    @apply w-8 h-8 rounded;
+
+    &.intensity-1 {
+      background-color: #e0f2fe;
+    }
+
+    &.intensity-2 {
+      background-color: #b3e5fc;
+    }
+
+    &.intensity-3 {
+      background-color: #4fc3f7;
+    }
+
+    &.intensity-4 {
+      background-color: #29b6f6;
+    }
+
+    &.intensity-5 {
+      background-color: #0288d1;
+    }
+  }
+
+  .heatmap-labels {
+    @apply flex gap-2;
+
+    .day-label {
+      @apply w-8 text-center text-xs font-medium;
+      color: var(--color-primary-2);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .dashboard-cards {
+    @apply grid-cols-1 gap-4;
+  }
+
+  .dashboard-card {
+    @apply p-4;
+
+    .card-value {
+      @apply text-xl;
+    }
+
+    .card-icon {
+      @apply w-12 h-12;
+
+      div[class^='icon-'] {
+        @apply w-5 h-5;
+      }
+    }
+  }
+
+  .chart-container {
+    @apply p-4;
+  }
+
+  .bar-item {
+    .bar-label {
+      @apply w-20 text-xs;
+    }
+  }
+
+  .pie-chart-svg {
+    @apply w-40 h-40;
+  }
+}

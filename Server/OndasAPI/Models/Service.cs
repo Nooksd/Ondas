@@ -47,7 +47,7 @@ public class Service : EntityBase
 
     public ServiceStatus Status { get; set; } = ServiceStatus.Agendado;
 
-    public DateTime PaymentDate { get; set; }
+    public DateTime? PaymentDate { get; set; }
 
 
 
