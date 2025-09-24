@@ -86,6 +86,13 @@
       </div>
 
       <div class="header-right">
+        <div class="header-dynamic-content">
+          @if (headerConfig(); as config) {
+          <ng-container *ngComponentOutlet="config.component; inputs: config.inputs">
+          </ng-container>
+          }
+        </div>
+
         <div class="profile-container">
           <button class="user-profile" (click)="toggleProfileMenu()">
             <img src="/assets/profile.svg" alt="Avatar" class="profile-avatar" />

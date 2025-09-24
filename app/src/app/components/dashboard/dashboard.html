@@ -16,7 +16,7 @@
   <div class="dashboard-card">
     <div class="card-content">
       <div class="card-info">
-        <span class="card-label">Despezas totais</span>
+        <span class="card-label">Despesas totais</span>
         <div class="card-value-container">
           <span class="card-value">{{ formatCurrency(stats()?.despesasTotais) }}</span>
         </div>
@@ -57,14 +57,13 @@
 </div>
 
 <div class="dashboard-charts">
-  <div class="chart-container row-span-2">
+  <div class="chart-container chart-employees">
     <div class="chart-header">
       <h3 class="chart-title">Equipes x Tempo alocado</h3>
     </div>
     <div class="chart-content">
       <div class="chart-wrapper">
-        <canvas baseChart [data]="equipesChartData()" [options]="equipesChartOptions" type="bar">
-        </canvas>
+        <equipes-chart [equipesData]="stats()?.alocacaoPorEquipe || {}"></equipes-chart>
       </div>
     </div>
   </div>
@@ -73,51 +72,25 @@
     <div class="chart-header">
       <div class="chart-title-section">
         <h3 class="chart-title">Overview de vendas</h3>
-        <span class="chart-subtitle">+3 em janeiro</span>
       </div>
     </div>
     <div class="chart-content">
-      <canvas baseChart [data]="receitaChartData()" [options]="receitaChartOptions" type="line">
-      </canvas>
+      <receitas-chart [receitaDiaria]="stats()?.receitaDiaria || []"></receitas-chart>
     </div>
   </div>
 
   <div class="chart-container chart-heatmap">
-    <div class="chart-header">
-      <h3 class="chart-title">Heatmap de serviços</h3>
-    </div>
-    <div class="chart-content">
-      <div class="heatmap-container">
-        @if (heatmapData().grid.length > 0) {
-        <div class="heatmap-grid">
-          @for (week of heatmapData().grid; track $index) {
-          <div class="heatmap-row">
-            @for (day of week; track day.date) {
-            <div
-              class="heatmap-cell intensity-{{ day.intensity }}"
-              [title]="day.count + ' serviços em ' + day.date"
-            ></div>
-            }
-          </div>
-          }
-        </div>
-        <div class="heatmap-labels">
-          @for (label of heatmapData().labels; track $index) {
-          <span class="day-label">{{ label }}</span>
-          }
-        </div>
-        }
-      </div>
-    </div>
+    <heatmap-chart [servicosPorData]="stats()?.servicosPorData || []"></heatmap-chart>
   </div>
 
-  <div class="chart-container">
+  <div class="chart-container chart-status">
     <div class="chart-header">
       <h3 class="chart-title">Status dos serviços</h3>
     </div>
     <div class="chart-content">
-      <canvas baseChart [data]="statusChartData()" [options]="statusChartOptions" type="doughnut">
-      </canvas>
+      <div class="chart">
+        <status-chart [statusData]="transformedStatusData()"></status-chart>
+      </div>
     </div>
   </div>
 </div>

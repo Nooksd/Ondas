@@ -1,7 +1,9 @@
 @use '@ngxpert/hot-toast/styles';
+@use 'flatpickr/dist/flatpickr.css';
 @use 'tailwindcss';
 
 :root {
+  --color-primary-dark: #003392;
   --color-primary-1: #176dc6;
   --color-primary-2: #70a4dd;
   --color-primary-3: #bad3ee;
@@ -16,5 +18,36 @@
   border: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-1) var(--color-background-secondary);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-2);
+  border-radius: 8px;
+  border: 2px solid var(--color-background-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-1);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
   font-family: 'Inter', sans-serif;
 }

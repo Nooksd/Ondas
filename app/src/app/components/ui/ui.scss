@@ -1,14 +1,13 @@
 @use 'tailwindcss';
 
 .ui-container {
-  @apply flex h-screen;
+  @apply flex;
   background-color: var(--color-background-secondary);
 }
 
 .sidebar {
-  @apply fixed lg:static inset-y-0 left-0 z-50;
-  @apply flex flex-col w-65;
-  @apply transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out;
+  @apply flex flex-col w-65 h-screen;
+  @apply sticky top-0 z-30;
 
   &-header {
     @apply h-22;
@@ -106,7 +105,6 @@
 
 .header {
   @apply flex items-center justify-between;
-  @apply sticky top-0 z-30;
   @apply h-22 px-4 lg:px-6;
 
   &-left {
@@ -209,8 +207,14 @@
   }
 }
 
+.header-dynamic-content {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
 .content-area {
-  @apply flex-1 p-4 lg:p-6;
+  @apply flex-1 px-4 lg:px-6;
 }
 
 @media (max-width: 1023px) {

@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, inject, signal, viewChild } from '@angular/core';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -10,10 +10,12 @@ import {
 import { Store } from '@ngrx/store';
 import { logout } from 'app/store/auth/auth.actions';
 import { filter } from 'rxjs';
+import { HeaderService } from 'app/services/header.service';
+import { NgComponentOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-ui',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgComponentOutlet],
   templateUrl: './ui.html',
   styleUrl: './ui.scss',
 })
@@ -21,11 +23,13 @@ export class Ui {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private store = inject(Store);
+  private headerService = inject(HeaderService);
 
   breadcrumb = signal<string>('');
   title = signal<string>('');
   profileMenuOpen = signal<boolean>(false);
-  elementRef: any;
+
+  headerConfig = this.headerService.config;
 
   constructor() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {

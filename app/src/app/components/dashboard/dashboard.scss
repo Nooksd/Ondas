@@ -46,20 +46,28 @@
   }
 }
 
+.chart {
+  @apply flex justify-center items-center h-full w-full;
+}
+
 .dashboard-charts {
   @apply grid grid-cols-1 xl:grid-cols-4 gap-6;
 }
 
 .chart-employees {
-  @apply row-span-2 space-y-6;
+  @apply col-span-3 row-span-2 space-y-6 xl:col-span-1;
 }
 
 .chart-heatmap {
-  @apply col-span-2;
+  @apply col-span-3 xl:col-span-2;
 }
 
 .chart-overview {
   @apply col-span-3;
+}
+
+.chart-status {
+  @apply col-span-3 xl:col-span-1;
 }
 
 .chart-container {
@@ -70,6 +78,7 @@
 
 .chart-wrapper {
   height: 600px;
+  overflow: auto;
 }
 
 .chart-header {
@@ -83,58 +92,151 @@
     @apply text-lg font-semibold mb-1;
     color: var(--color-primary-1);
   }
+
+  .heatmap-header-content {
+    @apply flex items-center justify-between;
+  }
+
+  .month-navigation {
+    @apply flex items-center gap-3;
+
+    .month-nav-btn {
+      @apply w-8 h-8 flex items-center justify-center rounded-lg transition-colors;
+      background-color: #f1f5f9;
+      color: #475569;
+
+      &:hover:not(.disabled) {
+        background-color: #e2e8f0;
+        color: #1e293b;
+      }
+
+      &:active:not(.disabled) {
+        background-color: #cbd5e1;
+      }
+
+      &.disabled,
+      &:disabled {
+        @apply cursor-not-allowed opacity-30;
+        background-color: #f1f5f9;
+
+        &:hover {
+          background-color: #f1f5f9;
+          color: #475569;
+        }
+      }
+    }
+
+    .month-label {
+      @apply text-sm font-medium min-w-[120px] text-center capitalize;
+      color: var(--color-primary-1);
+    }
+  }
 }
 
 .chart-content {
   @apply w-full;
 }
 
-.heatmap-placeholder {
-  @apply flex flex-col items-center;
+.map-center {
+  @apply w-full flex justify-center items-center;
+}
 
-  .heatmap-grid {
-    @apply space-y-2 mb-4;
-  }
+.heatmap-container {
+  @apply w-full;
 
-  .heatmap-row {
-    @apply flex gap-2;
-  }
+  .weekday-labels {
+    @apply grid grid-cols-7 gap-2 mt-4;
 
-  .heatmap-cell {
-    @apply w-8 h-8 rounded;
-
-    &.intensity-1 {
-      background-color: #e0f2fe;
-    }
-
-    &.intensity-2 {
-      background-color: #b3e5fc;
-    }
-
-    &.intensity-3 {
-      background-color: #4fc3f7;
-    }
-
-    &.intensity-4 {
-      background-color: #29b6f6;
-    }
-
-    &.intensity-5 {
-      background-color: #0288d1;
+    .weekday-label {
+      @apply text-xs font-medium text-center;
+      color: #64748b;
     }
   }
 
-  .heatmap-labels {
-    @apply flex gap-2;
+  .calendar-grid {
+    @apply grid grid-cols-7 gap-2;
+    justify-items: center;
 
-    .day-label {
-      @apply w-8 text-center text-xs font-medium;
-      color: var(--color-primary-2);
+    .calendar-day {
+      @apply w-10 h-10 relative rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all;
+      background-color: #f8fafc;
+
+      &.not-current-month {
+        @apply opacity-40;
+        display: none !important;
+
+        .day-number {
+          color: #94a3b8;
+        }
+      }
+
+      &.no-services {
+        opacity: 0.2;
+      }
+
+      .day-number {
+        @apply text-sm font-medium;
+        color: #1e293b;
+      }
+
+      .service-count {
+        @apply text-xs font-bold absolute bottom-1;
+        color: #1e40af;
+      }
+
+      &[data-intensity='0'] {
+        background-color: #f8fafc;
+      }
+
+      &[data-intensity='1'] {
+        background-color: var(--color-primary-4);
+      }
+
+      &[data-intensity='2'] {
+        background-color: var(--color-primary-3);
+
+        .day-number,
+        .service-count {
+          color: white;
+        }
+      }
+
+      &[data-intensity='3'] {
+        background-color: var(--color-primary-2);
+
+        .day-number,
+        .service-count {
+          color: white;
+        }
+      }
+
+      &[data-intensity='4'] {
+        background-color: var(--color-primary-1);
+
+        .day-number,
+        .service-count {
+          color: white;
+        }
+      }
+
+      &[data-intensity='5'] {
+        background-color: var(--color-primary-dark);
+
+        .day-number,
+        .service-count {
+          color: white;
+        }
+      }
+
+      &:hover:not(.no-services) {
+        transform: scale(1.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+      }
     }
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .dashboard-cards {
     @apply grid-cols-1 gap-4;
@@ -160,13 +262,25 @@
     @apply p-4;
   }
 
-  .bar-item {
-    .bar-label {
-      @apply w-20 text-xs;
+  .heatmap-container {
+    .calendar-grid {
+      @apply gap-1;
+
+      .calendar-day {
+        .day-number {
+          @apply text-xs;
+        }
+
+        .service-count {
+          @apply text-[10px];
+        }
+      }
     }
   }
 
-  .pie-chart-svg {
-    @apply w-40 h-40;
+  .month-navigation {
+    .month-label {
+      @apply text-xs min-w-[100px];
+    }
   }
 }
