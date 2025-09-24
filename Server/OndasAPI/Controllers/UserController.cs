@@ -70,7 +70,13 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
 
         Response.Headers.Append("X-Pagination", System.Text.Json.JsonSerializer.Serialize(metadata));
 
-        return Ok(usersDto);
+        var response = new
+        {
+           Users = usersDto,
+            Metadata = metadata
+        };
+
+        return Ok(response);
     }
 
 

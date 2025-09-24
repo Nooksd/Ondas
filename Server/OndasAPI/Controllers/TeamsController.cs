@@ -37,7 +37,13 @@ public class TeamsController(IUnitOfWork unitOfWork) : ControllerBase
 
         Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(teamsDto);
+        var response = new
+        {
+            Teams = teamsDto,
+            Metadata = metadata
+        };
+
+        return Ok(response);
     }
 
     [Authorize("Viewer")]

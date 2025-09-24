@@ -3,8 +3,6 @@ import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { HeaderService } from 'app/services/header.service';
-import { HeaderButtonActionComponent } from 'app/shared/header-button-action.component';
 import {
   loadCustomer,
   createCustomer,
@@ -32,13 +30,11 @@ export class CustomerForm implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private headerService = inject(HeaderService);
 
   customerForm: FormGroup;
   isEditMode = signal<boolean>(false);
   customerId = signal<number | null>(null);
   isLoading = signal<boolean>(false);
-  error = signal<string | null>(null);
   selectedCustomer = signal<CustomerDTO | null>(null);
   private alive = true;
 
@@ -49,12 +45,10 @@ export class CustomerForm implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setupRoute();
-    this.setupHeader();
   }
 
   ngOnDestroy() {
     this.alive = false;
-    this.headerService.clearHeaderConfig();
     this.store.dispatch(clearSelectedCustomer());
     this.store.dispatch(clearError());
   }
@@ -67,7 +61,7 @@ export class CustomerForm implements OnInit, OnDestroy {
       phone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]],
       address: this.fb.group({
         postalCode: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
-        region: ['', [Validators.required, Validators.maxLength(50)]],
+        region: ['', [Validators.required, Validators.maxLength(2)]],
         city: ['', [Validators.required, Validators.maxLength(50)]],
         neighborhood: ['', [Validators.required, Validators.maxLength(100)]],
         street: ['', [Validators.required, Validators.maxLength(100)]],
@@ -90,22 +84,7 @@ export class CustomerForm implements OnInit, OnDestroy {
     }
   }
 
-  private setupHeader() {
-    const title = this.isEditMode() ? 'Editar Cliente' : 'Novo Cliente';
-
-    this.headerService.setHeaderConfig({
-      component: HeaderButtonActionComponent,
-      inputs: {
-        buttonText: 'Voltar',
-        onClick: () => {
-          this.goBack();
-        },
-      },
-    });
-  }
-
   private setupSubscriptions() {
-    // Loading state
     this.store
       .select(selectCustomerLoading)
       .pipe(takeWhile(() => this.alive))
@@ -113,15 +92,6 @@ export class CustomerForm implements OnInit, OnDestroy {
         this.isLoading.set(loading);
       });
 
-    // Error state
-    this.store
-      .select(selectCustomerError)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((error) => {
-        this.error.set(error);
-      });
-
-    // Selected customer for edit mode
     this.store
       .select(selectSelectedCustomer)
       .pipe(takeWhile(() => this.alive))
@@ -172,36 +142,13 @@ export class CustomerForm implements OnInit, OnDestroy {
       } else {
         this.store.dispatch(createCustomer({ customer: customerData }));
       }
-
-      // Após sucesso, voltar para lista
-      setTimeout(() => {
-        if (!this.error()) {
-          this.goBack();
-        }
-      }, 1000);
-    } else {
-      // this.markFormGroupTouched();
     }
   }
-
-  // private markFormGroupTouched() {
-  //   Object.keys(this.customerForm.controls).forEach((key) => {
-  //     const control = this.customerForm.get(key);
-  //     control?.markAsTouched();
-
-  //     if (control && typeof control.controls === 'object') {
-  //       Object.keys(control.controls).forEach((nestedKey) => {
-  //         control.get(nestedKey)?.markAsTouched();
-  //       });
-  //     }
-  //   });
-  // }
 
   goBack() {
     this.router.navigate(['/clientes']);
   }
 
-  // Métodos utilitários para validação
   isFieldInvalid(fieldName: string): boolean {
     const field = this.customerForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
@@ -228,7 +175,6 @@ export class CustomerForm implements OnInit, OnDestroy {
     return null;
   }
 
-  // Métodos para formatação automática
   formatCpf(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
@@ -264,5 +210,12 @@ export class CustomerForm implements OnInit, OnDestroy {
     }
 
     this.customerForm.get('address.postalCode')?.setValue(value);
+  }
+
+  toState(event: Event, controlPath: string) {
+    const input = event.target as HTMLInputElement;
+    const upper = input.value.toUpperCase().slice(0, 2);
+    input.value = upper;
+    this.customerForm.get(controlPath)?.setValue(upper, { emitEvent: false });
   }
 }

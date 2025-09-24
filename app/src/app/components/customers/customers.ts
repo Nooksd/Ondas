@@ -3,14 +3,15 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { HeaderService } from 'app/services/header.service';
+import { ModalService } from 'app/services/model.service';
 import { HeaderButtonActionComponent } from 'app/shared/header-button-action.component';
-import { loadCustomer, loadCustomers } from 'app/store/customer/customer.actions';
+import { deleteCustomer, loadCustomers } from 'app/store/customer/customer.actions';
 import {
   selectCustomerLoading,
   selectCustomerPaginationInfo,
   selectCustomers,
 } from 'app/store/customer/customer.selectors';
-import { CustomerDTO, CustomerFilters } from 'app/store/customer/customer.state';
+import { CustomerDTO, CustomerFilters, PaginationDTO } from 'app/store/customer/customer.state';
 
 @Component({
   selector: 'app-customers',
@@ -23,9 +24,10 @@ export class Customers {
   private store = inject(Store);
   private router = inject(Router);
   private headerService = inject(HeaderService);
+  private modal = inject(ModalService);
 
   customers = signal<CustomerDTO[] | null>(null);
-  pagingInfo = signal<{ currentPage: number; totalItems: number; pageSize: number } | null>(null);
+  pagingInfo = signal<PaginationDTO | null>(null);
   isLoading = signal<boolean>(false);
   filter = signal<CustomerFilters>({
     page: 1,
@@ -90,7 +92,11 @@ export class Customers {
     }
 
     this.filter.set(newFilter);
-    this.store.dispatch(loadCustomers({ query: newFilter }));
+  }
+
+  searchCustomers() {
+    console.log(this.filter());
+    this.store.dispatch(loadCustomers({ query: this.filter() }));
   }
 
   changePage(page: number) {
@@ -102,12 +108,6 @@ export class Customers {
     this.store.dispatch(loadCustomers({ query: newFilter }));
   }
 
-  getTotalPages(): number {
-    const paging = this.pagingInfo();
-    if (!paging) return 1;
-    return Math.ceil(paging.totalItems / paging.pageSize);
-  }
-
   getStartItem(): number {
     const paging = this.pagingInfo();
     if (!paging) return 0;
@@ -116,13 +116,14 @@ export class Customers {
 
   getEndItem(): number {
     const paging = this.pagingInfo();
+
     if (!paging) return 0;
     const end = paging.currentPage * paging.pageSize;
-    return Math.min(end, paging.totalItems);
+    return Math.min(end, paging.totalCount);
   }
 
   getVisiblePages(): number[] {
-    const totalPages = this.getTotalPages();
+    const totalPages = this.pagingInfo()?.totalPages || 1;
     const currentPage = this.filter().page || 1;
     const maxVisiblePages = 5;
 
@@ -142,15 +143,19 @@ export class Customers {
   }
 
   editCustomer(id: number) {
-    console.log('Editar cliente:', id);
-    this.store.dispatch(loadCustomer({ id }));
+    this.router.navigate([`/clientes/${id}`]);
   }
 
-  viewCustomer(id: number) {
-    console.log('Ver cliente:', id);
-  }
+  async deleteCustomer(id: number) {
+    const ok = await this.modal.confirm(
+      'Deletar cliente',
+      'Deseja realmente deletar este cliente? Esta ação não pode ser desfeita.',
+      'Deletar',
+      'Cancelar'
+    );
 
-  addCustomer() {
-    console.log('Adicionar cliente');
+    if (!ok) return;
+
+    this.store.dispatch(deleteCustomer({ id }));
   }
 }

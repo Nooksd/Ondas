@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CustomerDTO, CustomerFilters } from './customer.state';
+import { CustomerDTO, CustomerFilters, PaginationDTO } from './customer.state';
 
 export const loadCustomers = createAction(
   '[Customer] Load Customers',
@@ -7,7 +7,7 @@ export const loadCustomers = createAction(
 );
 export const loadCustomersSuccess = createAction(
   '[Customer] Load Customers Success',
-  props<{ customers: CustomerDTO[]; totalItems: number; currentPage: number; pageSize: number }>()
+  props<{ customers: CustomerDTO[]; pagination: PaginationDTO }>()
 );
 export const loadCustomersFailure = createAction(
   '[Customer] Load Customers Failure',

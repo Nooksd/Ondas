@@ -23,14 +23,12 @@ export class CustomerEffects {
             success: 'Clientes carregadas com sucesso!',
             error: 'Erro ao carregar clientes',
           }),
-          map((response) =>
-            CustomerActions.loadCustomersSuccess({
+          map((response) => {
+            return CustomerActions.loadCustomersSuccess({
               customers: response.customers,
-              totalItems: response.totalItems,
-              currentPage: response.currentPage,
-              pageSize: response.pageSize,
-            })
-          ),
+              pagination: response.metadata,
+            });
+          }),
           catchError((error) =>
             of(
               CustomerActions.loadCustomersFailure({

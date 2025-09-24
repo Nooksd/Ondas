@@ -42,11 +42,11 @@
           <span class="nav-text">Funcionários</span>
         </a>
 
-        <a routerLink="/times" routerLinkActive="nav-item-active" class="nav-item">
+        <a routerLink="/equipes" routerLinkActive="nav-item-active" class="nav-item">
           <div class="icon">
             <div class="icon-team"></div>
           </div>
-          <span class="nav-text">Times</span>
+          <span class="nav-text">Equipes</span>
         </a>
       </div>
 
@@ -77,14 +77,18 @@
       <div class="header-left">
         <div class="breadcrumb-title">
           <nav class="breadcrumb">
-            <span class="breadcrumb-item">Pages</span>
+            <a routerLink="/dashboard">
+              <span class="breadcrumb-item">Pages</span>
+            </a>
             @for (page of breadcrumb(); let i = $index; track page) {
             <span class="breadcrumb-separator">/</span>
-            <span
-              class="breadcrumb-item"
-              [class.breadcrumb-current]="i === breadcrumb().length - 1"
-              >{{ page }}</span
-            >
+            <a routerLink="/{{ breadcrumbRoute(i) }}">
+              <span
+                class="breadcrumb-item"
+                [class.breadcrumb-current]="i === breadcrumb().length - 1"
+                >{{ page }}</span
+              >
+            </a>
             }
           </nav>
           <span class="title">{{ title() }}</span>

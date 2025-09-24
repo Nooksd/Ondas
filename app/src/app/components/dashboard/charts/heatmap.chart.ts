@@ -277,7 +277,6 @@ export class HeatmapChart {
     return calendar;
   });
 
-  // trackBy para ngFor
   trackByDate(_: number, item: CalendarDay) {
     return item.date;
   }

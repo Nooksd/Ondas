@@ -27,6 +27,13 @@ export class Ui {
 
   breadcrumb = signal<string>('');
   title = signal<string>('');
+  routes = signal<string[]>([]);
+
+  breadcrumbRoute(i: number): string {
+    const routes = this.routes();
+    if (!routes || routes.length === 0) return '';
+    return routes.slice(0, i + 1).join('/');
+  }
   profileMenuOpen = signal<boolean>(false);
 
   headerConfig = this.headerService.config;
@@ -35,7 +42,8 @@ export class Ui {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       const routeData = this.getRouteData();
       this.breadcrumb.set(routeData?.breadcrumb.split('/') || 'padrão');
-      this.title.set(routeData?.title || 'padrão');
+      this.title.set(routeData?.title.split('/') || 'padrão');
+      this.routes.set(routeData?.routes || []);
     });
   }
 

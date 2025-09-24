@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { CustomerDTO, CustomerFilters } from './customer.state';
+import { CustomerDTO, CustomerFilters, CustomersResponseDTO } from './customer.state';
 import { ApiHttpClient } from '../../core/api-http-client';
-
-interface CustomerResponse {
-  customers: CustomerDTO[];
-  totalItems: number;
-  currentPage: number;
-  pageSize: number;
-}
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
@@ -16,21 +9,16 @@ export class CustomerService {
 
   constructor(private http: ApiHttpClient) {}
 
-  getCustomers(query?: CustomerFilters): Observable<CustomerResponse> {
+  getCustomers(query?: CustomerFilters): Observable<CustomersResponseDTO> {
     const params: any = {};
 
     if (query?.page) params.Page = query.page;
     if (query?.size) params.Size = query.size;
     if (query?.q) params.q = query.q;
 
-    return this.http.get<CustomerDTO[]>(this.baseUrl, { params }).pipe(
-      map((customers: CustomerDTO[]) => ({
-        customers,
-        totalItems: customers.length,
-        currentPage: query?.page || 1,
-        pageSize: query?.size || 10,
-      }))
-    );
+    return this.http
+      .get<CustomersResponseDTO>(this.baseUrl, { params })
+      .pipe(map((response: CustomersResponseDTO) => response));
   }
 
   getCustomer(id: number): Observable<CustomerDTO> {

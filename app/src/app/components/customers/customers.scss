@@ -20,6 +20,7 @@
         .search-input {
           @apply w-full pl-10 pr-4 py-2 border rounded-lg transition-all;
           border-color: var(--color-primary-3);
+          color: var(--color-primary-1);
 
           &:focus {
             @apply outline-none;
@@ -112,6 +113,7 @@
       tbody {
         .table-row {
           @apply border-t transition-colors;
+          border-color: var(--color-primary-dark);
 
           td {
             @apply px-15 py-4 align-middle text-sm;

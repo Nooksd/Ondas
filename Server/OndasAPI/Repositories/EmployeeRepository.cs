@@ -46,7 +46,7 @@ public class EmployeeRepository(AppDbContext context) : Repository<Employee>(con
         {
             var qLower = q.Trim().ToLower();
 
-            query = query.Where(p => p.Name.Contains(qLower, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(p => p.Name.ToLower().Contains(qLower));
         }
 
         query = query.OrderBy(p => p.Name);

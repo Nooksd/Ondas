@@ -8,12 +8,12 @@
         <input
           type="text"
           class="search-input"
-          placeholder="Nome da vaga ou cargo"
+          placeholder="Nome do cliente"
           [value]="filter().q"
           (input)="updateFilter('q', $event)"
         />
       </div>
-      <button class="btn-search">Buscar clientes</button>
+      <button (click)="searchCustomers()" class="btn-search">Buscar clientes</button>
     </div>
 
     <div class="page-size-container">
@@ -77,7 +77,7 @@
               </button>
               <button
                 class="action-btn btn-info"
-                (click)="viewCustomer(customer.id!)"
+                (click)="deleteCustomer(customer.id!)"
                 title="Ver detalhes"
               >
                 <div class="icon-delete"></div>
@@ -101,12 +101,12 @@
   </div>
 </div>
 
-@if (pagingInfo() && pagingInfo()!.totalItems > 0) {
+@if (pagingInfo() && pagingInfo()!.totalCount > 0) {
 <div class="pagination-container">
   <div class="pagination-info">
     <span class="pagination-text">
       Mostrando {{ getStartItem() }} a {{ getEndItem() }} de
-      {{ pagingInfo()!.totalItems }} resultados
+      {{ pagingInfo()!.totalCount }} resultados
     </span>
   </div>
 

@@ -1,21 +1,3 @@
-<!-- Error Alert -->
-<!-- @if (error()) {
-    <div class="error-alert">
-      <div class="error-content">
-        <div class="icon-alert-circle"></div>
-        <div class="error-text">
-          <strong>Erro:</strong> {{ error() }}
-        </div>
-        <button 
-          class="btn-close-error"
-          (click)="store.dispatch(clearError())"
-        >
-          <div class="icon-x"></div>
-        </button>
-      </div>
-    </div>
-  } -->
-
 <div class="form-container">
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="customer-form">
     <div class="form-section">
@@ -117,7 +99,9 @@
             class="form-input"
             [class.error]="isFieldInvalid('address.region')"
             formControlName="region"
-            placeholder="Ex: Minas Gerais"
+            placeholder="Ex: MG"
+            style="text-transform: uppercase"
+            (input)="toState($event, 'address.region')"
           />
           @if (getFieldError('address.region')) {
           <span class="field-error">{{ getFieldError('address.region') }}</span>

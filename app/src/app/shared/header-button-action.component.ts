@@ -10,7 +10,7 @@ import { Component, input } from '@angular/core';
         padding: 0.5rem 1rem;
         background-color: #176dc6;
         color: #fff;
-        border-radius: 15px;
+        border-radius: 0.5rem;
         cursor: pointer;
       }
     `,

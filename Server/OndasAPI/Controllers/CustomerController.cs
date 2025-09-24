@@ -17,8 +17,7 @@ public class CustomerController(IUnitOfWork unitOfWork) : ControllerBase
 
     [Authorize("Viewer")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers([FromQuery] PaginationParameters pagination, string? q)
-    {
+    public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers([FromQuery] PaginationParameters pagination, string? q) {
         var customers = await _unitOfWork.CustomerRepository.GetCustomersAsync(pagination, q ?? "");
 
         var metadata = new
@@ -35,7 +34,13 @@ public class CustomerController(IUnitOfWork unitOfWork) : ControllerBase
 
         Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(customersDto);
+        var response = new
+        {
+            Customers = customersDto,
+            Metadata = metadata
+        };
+
+        return Ok(response);
     }
 
     [Authorize("Viewer")]

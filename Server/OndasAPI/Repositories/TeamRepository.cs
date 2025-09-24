@@ -47,7 +47,7 @@ public class TeamRepository(AppDbContext context) : Repository<Team>(context), I
         {
             var qLower = q.Trim().ToLower();
 
-            query = query.Where(p => p.Name.Contains(qLower, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(p => p.Name.ToLower().Contains(qLower));
         }
 
         query = query.OrderBy(p => p.Name);

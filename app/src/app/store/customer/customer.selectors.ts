@@ -25,11 +25,7 @@ export const selectCustomerError = createSelector(
 
 export const selectCustomerPaginationInfo = createSelector(
   selectCustomerState,
-  (state: CustomerState) => ({
-    currentPage: state.currentPage,
-    totalItems: state.totalItems,
-    pageSize: state.pageSize,
-  })
+  (state: CustomerState) => state.pagination
 );
 
 export const selectCustomerById = (id: number) =>

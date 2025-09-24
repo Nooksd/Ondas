@@ -11,18 +11,13 @@ export const customerReducer = createReducer(
     error: null,
   })),
 
-  on(
-    CustomerActions.loadCustomersSuccess,
-    (state, { customers, totalItems, currentPage, pageSize }) => ({
-      ...state,
-      loading: false,
-      error: null,
-      customers,
-      totalItems,
-      currentPage,
-      pageSize,
-    })
-  ),
+  on(CustomerActions.loadCustomersSuccess, (state, { customers, pagination }) => ({
+    ...state,
+    loading: false,
+    error: null,
+    customers,
+    pagination,
+  })),
 
   on(CustomerActions.loadCustomersFailure, (state, { error }) => ({
     ...state,
@@ -60,7 +55,6 @@ export const customerReducer = createReducer(
     loading: false,
     error: null,
     customers: [...state.customers, customer],
-    totalItems: state.totalItems + 1,
   })),
 
   on(CustomerActions.createCustomerFailure, (state, { error }) => ({
@@ -101,7 +95,6 @@ export const customerReducer = createReducer(
     loading: false,
     error: null,
     customers: state.customers.filter((c) => c.id !== id),
-    totalItems: state.totalItems - 1,
     selectedCustomer: state.selectedCustomer?.id === id ? null : state.selectedCustomer,
   })),
 

@@ -21,18 +21,6 @@ public class ServiceController(IUnitOfWork unitOfWork) : ControllerBase
     {
         var services = await _unitOfWork.ServiceRepository.GetServicesAsync(pagination, customerId, teamId);
 
-        var metadata = new
-        {
-            services?.CurrentPage,
-            services?.PageSize,
-            services?.TotalPages,
-            services?.TotalCount,
-            services?.HasNext,
-            services?.HasPrevious,
-        };
-
-        Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-
         var servicesDto = services.Adapt<IEnumerable<ServiceDTO>>();
 
         return Ok(servicesDto);

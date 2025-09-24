@@ -32,16 +32,16 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         component: Dashboard,
-        data: { breadcrumb: 'Dashboard', title: 'Dashboard' },
+        data: { breadcrumb: 'Dashboard', title: 'Dashboard' ,routes: ['dashboard'] },
       },
       {
         path: 'servicos',
         component: Services,
-        data: { breadcrumb: 'Serviços', title: 'Serviços' },
+        data: { breadcrumb: 'Serviços', tilte: 'Serviços' ,routes: ['servicos'] },
       },
       {
         path: 'clientes',
-        data: { breadcrumb: 'Clientes', title: 'Clientes' },
+        data: { breadcrumb: 'Clientes', title: 'Clientes' ,routes: ['clientes'] },
         children: [
           {
             path: '',
@@ -50,39 +50,39 @@ export const routes: Routes = [
           {
             path: 'novo',
             component: CustomerForm,
-            data: { breadcrumb: 'Clientes/Novo', title: 'Novo Cliente' },
+            data: { breadcrumb: 'Clientes/Novo', title: 'Novo Cliente' ,routes: ['clientes', 'novo'] },
           },
           {
             path: ':id',
             component: CustomerForm,
-            data: { breadcrumb: 'Clientes/Editar', title: 'Editar Cliente' },
+            data: { breadcrumb: 'Clientes/Editar', title: 'Editar Cliente' ,routes: ['clientes', ':id'] },
           },
         ],
       },
       {
         path: 'funcionarios',
         component: Employees,
-        data: { breadcrumb: 'Funcionários', title: 'Funcionários' },
+        data: { breadcrumb: 'Funcionários', title: 'Funcionários' ,routes: ['funcionarios'] },
       },
       {
-        path: 'times',
+        path: 'equipes',
         component: Teams,
-        data: { breadcrumb: 'Times', title: 'Times' },
+        data: { breadcrumb: 'Equipes', title: 'Equipes' ,routes: ['equipes'] },
       },
       {
         path: 'usuarios',
         component: Users,
-        data: { breadcrumb: 'Usuários', title: 'Usuários' },
+        data: { breadcrumb: 'Usuários', title: 'Usuários' ,routes: ['usuarios'] },
       },
       {
         path: 'perfil',
         component: Profile,
-        data: { breadcrumb: 'Perfil', title: 'Perfil' },
+        data: { breadcrumb: 'Perfil', title: 'Perfil' ,routes: ['perfil'] },
       },
       {
         path: 'configuracoes',
         component: Settings,
-        data: { breadcrumb: 'Configurações', title: 'Configurações' },
+        data: { breadcrumb: 'Configurações', title: 'Configurações' ,routes: ['configuracoes'] },
       },
     ],
   },

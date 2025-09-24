@@ -41,7 +41,7 @@ export class EquipesChart {
           label: 'Horas Alocadas',
           data: entries.map(([, horas]) => horas),
           backgroundColor: '#3b82f6',
-          barThickness: 20, // Altura fixa da barra
+          barThickness: 20,
           borderRadius: 8,
           borderSkipped: false,
         },

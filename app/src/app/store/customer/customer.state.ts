@@ -17,6 +17,20 @@ export interface CustomerDTO {
   address?: AddressDTO;
 }
 
+export interface PaginationDTO {
+  currentPage: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface CustomersResponseDTO {
+  customers: CustomerDTO[];
+  metadata: PaginationDTO;
+}
+
 export interface CustomerFilters {
   page?: number;
   size?: number;
@@ -28,10 +42,7 @@ export interface CustomerState {
   selectedCustomer: CustomerDTO | null;
   loading: boolean;
   error: string | null;
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
-  totalItems: number;
+  pagination: PaginationDTO | null;
   filters: CustomerFilters;
 }
 
@@ -40,10 +51,7 @@ export const initialCustomerState: CustomerState = {
   selectedCustomer: null,
   loading: false,
   error: null,
-  currentPage: 1,
-  pageSize: 10,
-  totalPages: 0,
-  totalItems: 0,
+  pagination: null,
   filters: {
     page: 1,
     size: 10,

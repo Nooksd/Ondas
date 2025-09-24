@@ -37,7 +37,13 @@ public class EmployeesController(IUnitOfWork unitOfWork) : ControllerBase
 
         Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(employeesDto);
+        var response = new
+        {
+            Employees = employeesDto,
+            Metadata = metadata
+        };
+
+        return Ok(response);
     }
 
     [Authorize("Viewer")]
