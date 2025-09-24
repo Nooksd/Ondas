@@ -18,6 +18,11 @@ export class CustomerEffects {
       ofType(CustomerActions.loadCustomers),
       mergeMap((action) =>
         this.customerService.getCustomers(action.query).pipe(
+          this.toast.observe({
+            loading: 'Buscando clientes...',
+            success: 'Clientes carregadas com sucesso!',
+            error: 'Erro ao carregar clientes',
+          }),
           map((response) =>
             CustomerActions.loadCustomersSuccess({
               customers: response.customers,
@@ -43,6 +48,11 @@ export class CustomerEffects {
       ofType(CustomerActions.loadCustomer),
       mergeMap((action) =>
         this.customerService.getCustomer(action.id).pipe(
+          this.toast.observe({
+            loading: 'Buscando cliente...',
+            success: 'Cliente carregado com sucesso!',
+            error: 'Erro ao carregar cliente',
+          }),
           map((customer: CustomerDTO) => CustomerActions.loadCustomerSuccess({ customer })),
           catchError((error) =>
             of(

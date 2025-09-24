@@ -8,7 +8,7 @@ import { EquipesChart } from './charts/equipes.chart';
 import { StatusChart } from './charts/status.chart';
 import { ReceitasChart } from './charts/receita.chart';
 import { HeatmapChart } from './charts/heatmap.chart';
-import { HeaderDateRangePickerComponent } from 'app/shared/range-date-picker.component';
+import { HeaderDateRangePickerComponent } from 'app/shared/header-range-date-picker.component';
 import { HeaderService } from 'app/services/header.service';
 
 @Component({
@@ -18,27 +18,30 @@ import { HeaderService } from 'app/services/header.service';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-  store = inject(Store);
+  private store = inject(Store);
   private headerService = inject(HeaderService);
 
   stats = signal<DashboardStatsDTO | null>(null);
   startDate = signal<Date>(this.getFirstDayOfMonth());
   endDate = signal<Date>(new Date());
 
-  constructor() {
+  ngOnInit() {
     this.setupHeader();
 
+    if (!this.stats()) {
+      this.store.dispatch(
+        loadDashboardStats({
+          query: {
+            dataInicial: this.startDate().toISOString().slice(0, 10),
+            dataFinal: this.endDate().toISOString().slice(0, 10),
+          },
+        })
+      );
+    }
+  }
+
+  constructor() {
     this.store.select(selectDashboardStats).subscribe((stats) => {
-      if (!stats) {
-        this.store.dispatch(
-          loadDashboardStats({
-            query: {
-              dataInicial: this.startDate().toISOString().slice(0, 10),
-              dataFinal: this.endDate().toISOString().slice(0, 10),
-            },
-          })
-        );
-      }
       this.stats.set(stats);
     });
   }

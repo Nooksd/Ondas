@@ -78,8 +78,14 @@
         <div class="breadcrumb-title">
           <nav class="breadcrumb">
             <span class="breadcrumb-item">Pages</span>
+            @for (page of breadcrumb(); let i = $index; track page) {
             <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current">{{ breadcrumb() }}</span>
+            <span
+              class="breadcrumb-item"
+              [class.breadcrumb-current]="i === breadcrumb().length - 1"
+              >{{ page }}</span
+            >
+            }
           </nav>
           <span class="title">{{ title() }}</span>
         </div>

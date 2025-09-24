@@ -9,6 +9,7 @@ import { Ui } from './components/ui/ui';
 import { Error404 } from './components/error404/error404';
 import { Services } from '@components/services/services';
 import { Customers } from '@components/customers/customers';
+import { CustomerForm } from '@components/customers/customer-form/customer-form';
 import { Employees } from '@components/employees/employees';
 import { Teams } from '@components/teams/teams';
 import { Users } from '@components/users/users';
@@ -40,8 +41,23 @@ export const routes: Routes = [
       },
       {
         path: 'clientes',
-        component: Customers,
         data: { breadcrumb: 'Clientes', title: 'Clientes' },
+        children: [
+          {
+            path: '',
+            component: Customers,
+          },
+          {
+            path: 'novo',
+            component: CustomerForm,
+            data: { breadcrumb: 'Clientes/Novo', title: 'Novo Cliente' },
+          },
+          {
+            path: ':id',
+            component: CustomerForm,
+            data: { breadcrumb: 'Clientes/Editar', title: 'Editar Cliente' },
+          },
+        ],
       },
       {
         path: 'funcionarios',

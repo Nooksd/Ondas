@@ -16,7 +16,7 @@ export class App {
       ...this.toast.defaultConfig,
       position: 'top-right',
       dismissible: true,
-      duration: 3000,
+      duration: 1000,
       stacking: 'vertical',
       visibleToasts: 5,
     };

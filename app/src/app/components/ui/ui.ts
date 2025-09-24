@@ -34,7 +34,7 @@ export class Ui {
   constructor() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       const routeData = this.getRouteData();
-      this.breadcrumb.set(routeData?.breadcrumb || 'padrão');
+      this.breadcrumb.set(routeData?.breadcrumb.split('/') || 'padrão');
       this.title.set(routeData?.title || 'padrão');
     });
   }
