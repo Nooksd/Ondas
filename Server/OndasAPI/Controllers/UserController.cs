@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OndasAPI.Context;
 using OndasAPI.DTOs;
 using OndasAPI.Models;
 using OndasAPI.Pagination;
@@ -13,9 +14,10 @@ namespace OndasAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-public class UserController(UserManager<AppUser> userManager) : ControllerBase
+public class UserController(UserManager<AppUser> userManager, AppDbContext context) : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager = userManager;
+    private readonly AppDbContext _context = context;
 
     private readonly string[] _roles = ["Admin", "Editor", "Viewer"];
 
@@ -24,14 +26,11 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
     public async Task<ActionResult> GetUsers([FromQuery] PaginationParameters pagination, string q = "")
     {
         var qLower = (q ?? "").Trim().ToLower();
-
-        var query = _userManager.Users.AsQueryable();
+        var query = _userManager.Users.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(qLower))
         {
-            query = query.Where(u =>
-                (u.UserName != null && u.UserName.Contains(qLower, StringComparison.CurrentCultureIgnoreCase)) ||
-                (u.Email != null && u.Email.Contains(qLower, StringComparison.CurrentCultureIgnoreCase)));
+            query = query.Where(u => u.UserName != null && u.UserName.ToLower().Contains(qLower));
         }
 
         query = query.OrderBy(u => u.UserName);
@@ -51,14 +50,18 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
         var usersList = paginatedUsers.ToList();
         var usersDto = usersList.Adapt<List<UserDTO>>();
 
-        var roleTasks = usersList.Select(async u => new
-        {
-            u.Id,
-            Roles = (await _userManager.GetRolesAsync(u)).ToArray()
-        });
+        var userIds = usersList.Select(u => u.Id).ToList();
 
-        var rolesResults = await Task.WhenAll(roleTasks);
-        var rolesById = rolesResults.ToDictionary(x => x.Id, x => x.Roles);
+        var rolesQuery = from ur in _context.UserRoles
+                         join r in _context.Roles on ur.RoleId equals r.Id
+                         where userIds.Contains(ur.UserId)
+                         select new { ur.UserId, r.Name };
+
+        var rolesList = await rolesQuery.ToListAsync();
+
+        var rolesById = rolesList
+            .GroupBy(x => x.UserId)
+            .ToDictionary(g => g.Key, g => g.Select(x => x.Name!).ToArray());
 
         foreach (var dto in usersDto)
         {
@@ -72,12 +75,13 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
 
         var response = new
         {
-           Users = usersDto,
+            Users = usersDto,
             Metadata = metadata
         };
 
         return Ok(response);
     }
+
 
 
     [Authorize("Admin")]
@@ -107,7 +111,12 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
         if (await _userManager.FindByEmailAsync(userDto.Email!) != null)
             return Conflict("Email já existe");
 
-        var user = userDto.Adapt<AppUser>();
+        AppUser user = new()
+        {
+            Email = userDto.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = userDto.UserName,
+        };
 
         var result = await _userManager.CreateAsync(user, userDto.Password!);
         if (!result.Succeeded)
@@ -125,21 +134,26 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
     }
 
     [Authorize("Admin")]
-    [HttpPut]
-    public async Task<IActionResult> PutUser([FromBody] UserDTO userDto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> PatchUser(string id, [FromBody] UpdateUserDTO updateUser)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var user = await _userManager.FindByIdAsync(userDto.Id!);
+        var user = await _userManager.FindByIdAsync(id);
         if (user is null)
             return NotFound("Usuário não encontrado");
 
-        if (!string.IsNullOrWhiteSpace(userDto.UserName))
-            user.UserName = userDto.UserName;
+        var superemail = Environment.GetEnvironmentVariable("SUPERADM_EMAIL") ?? "superadm@ondas.com";
 
-        if (!string.IsNullOrWhiteSpace(userDto.Email))
-            user.Email = userDto.Email;
+        if (user.Email!.Equals(superemail))
+        {
+            return BadRequest("Superadm não pode ser editado");
+        }
+
+
+        if (!string.IsNullOrWhiteSpace(updateUser.UserName))
+            user.UserName = updateUser.UserName;
+
+        if (!string.IsNullOrWhiteSpace(updateUser.Email))
+            user.Email = updateUser.Email;
 
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)
@@ -157,6 +171,13 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
         var user = await _userManager.FindByIdAsync(id);
         if (user is null)
             return NotFound("Usuário não encontrado");
+
+        var superemail = Environment.GetEnvironmentVariable("SUPERADM_EMAIL") ?? "superadm@ondas.com";
+
+        if (user.Email!.Equals(superemail))
+        {
+            return BadRequest("Superadm não pode ser deletado");
+        }
 
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded)
@@ -187,8 +208,8 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
     }
 
     [Authorize("Admin")]
-    [HttpPost("admin-change-password/{id}")]
-    public async Task<IActionResult> AdminChangePassword(string id, [FromBody] string newPassword)
+    [HttpPost("change-password/{id}")]
+    public async Task<IActionResult> AdminChangePassword(string id, [FromBody] ChangePasswordDTO changePasswordDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -198,7 +219,7 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
             return NotFound("Usuário não encontrado");
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var resetResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        var resetResult = await _userManager.ResetPasswordAsync(user, token, changePasswordDto.NewPassword!);
 
         if (!resetResult.Succeeded)
             return BadRequest(resetResult.Errors);
@@ -222,38 +243,54 @@ public class UserController(UserManager<AppUser> userManager) : ControllerBase
     }
 
     [Authorize("Admin")]
-    [HttpPost("{id}/add-role")]
-    public async Task<IActionResult> AddUserToRole(string id, [FromBody] string newRole)
+    [HttpPost("add-role/{id}")]
+    public async Task<IActionResult> AddUserToRole(string id, [FromBody] RoleDTO role)
     {
         var user = await _userManager.FindByIdAsync(id);
         if (user is null)
             return NotFound("Usuário não encontrado");
 
-        if (_roles.Contains(newRole) == false)
+        if (_roles.Contains(role.RoleName) == false)
             return BadRequest("Papel inválido");
 
-        var result = await _userManager.AddToRoleAsync(user, newRole);
+        var result = await _userManager.AddToRoleAsync(user, role.RoleName!);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        return Ok();
+        var userDto = user.Adapt<UserDTO>();
+
+        var response = new
+        {
+            User = userDto,
+            RoleName = role.RoleName!,
+        };
+
+        return Ok(response);
     }
 
     [Authorize("Admin")]
-    [HttpPost("{id}/remove-role")]
-    public async Task<IActionResult> RemoveUserFromRole(string id, [FromBody] string roleName)
+    [HttpPost("remove-role/{id}")]
+    public async Task<IActionResult> RemoveUserFromRole(string id, [FromBody] RoleDTO role)
     {
         var user = await _userManager.FindByIdAsync(id);
         if (user is null)
             return NotFound("Usuário não encontrado");
 
-        if (!await _userManager.IsInRoleAsync(user, roleName))
+        if (!await _userManager.IsInRoleAsync(user, role.RoleName!))
             return BadRequest("Usuário não está neste papel");
 
-        var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+        var result = await _userManager.RemoveFromRoleAsync(user, role.RoleName!);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        return Ok();
+        var userDto = user.Adapt<UserDTO>();
+
+        var response = new
+        {
+            User = userDto,
+            RoleName = role.RoleName!,
+        };
+
+        return Ok(response);
     }
 }

@@ -1,0 +1,68 @@
+<div class="form-container">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+    <div class="form-section">
+      <h2 class="section-title">Dados Pessoais</h2>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="userName">Nome Completo *</label>
+          <input
+            type="text"
+            id="userName"
+            class="form-input"
+            [class.error]="isFieldInvalid('userName')"
+            formControlName="userName"
+            placeholder="Digite o nome completo"
+          />
+          @if (getFieldError('userName')) {
+          <span class="field-error">{{ getFieldError('userName') }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="email">E-mail *</label>
+          <input
+            type="email"
+            id="email"
+            class="form-input"
+            [class.error]="isFieldInvalid('email')"
+            formControlName="email"
+            placeholder="exemplo@email.com"
+          />
+          @if (getFieldError('email')) {
+          <span class="field-error">{{ getFieldError('email') }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="password">Senha *</label>
+          <input
+            type="text"
+            id="password"
+            class="form-input"
+            [class.error]="isFieldInvalid('password')"
+            formControlName="password"
+            placeholder="Digite a senha"
+          />
+          @if (getFieldError('password')) {
+          <span class="field-error">{{ getFieldError('password') }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="goBack()" [disabled]="isLoading()">
+        Cancelar
+      </button>
+
+      <button type="submit" class="btn-submit" [disabled]="isLoading() || userForm.invalid">
+        @if (isLoading()) {
+        <div class="loading-spinner"></div>
+        Salvando... } @else {
+        {{ isEditMode() ? 'Atualizar Usuário' : 'Criar Usuário' }}
+        }
+      </button>
+    </div>
+  </form>
+</div>

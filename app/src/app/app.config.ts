@@ -22,6 +22,8 @@ import { CustomerEffects } from './store/customer/customer.effects';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { employeeReducer } from './store/employee/employee.reducer';
 import { EmployeeEffects } from './store/employee/employee.effects';
+import { userReducer } from './store/user/user.reducer';
+import { UserEffects } from './store/user/user.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,8 +37,9 @@ export const appConfig: ApplicationConfig = {
       dashboard: dashboardReducer,
       customer: customerReducer,
       employee: employeeReducer,
+      user: userReducer,
     }),
-    provideEffects([AuthEffects, DashboardEffects, CustomerEffects, EmployeeEffects]),
+    provideEffects([AuthEffects, DashboardEffects, CustomerEffects, EmployeeEffects, UserEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideHttpClient(withInterceptorsFromDi()),
     {

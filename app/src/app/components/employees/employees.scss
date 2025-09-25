@@ -41,7 +41,7 @@
 
         .active-input {
           @apply w-4 h-4 border rounded-sm bg-gray-50;
-          color: var(--color-primary-1);
+          accent-color: var(--color-primary-1);
           border-color: var(--color-primary-3);
 
           &:checked {

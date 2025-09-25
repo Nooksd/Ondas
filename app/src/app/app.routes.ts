@@ -14,6 +14,7 @@ import { Employees } from '@components/employees/employees';
 import { Teams } from '@components/teams/teams';
 import { Users } from '@components/users/users';
 import { EmployeeForm } from '@components/employees/employee-form/employee-form';
+import { UserForm } from '@components/users/user-form/user-form';
 
 export const routes: Routes = [
   {
@@ -38,7 +39,7 @@ export const routes: Routes = [
       {
         path: 'servicos',
         component: Services,
-        data: { breadcrumb: 'Serviços', tilte: 'Serviços', routes: ['servicos'] },
+        data: { breadcrumb: 'Serviços', title: 'Serviços', routes: ['servicos'] },
       },
       {
         path: 'clientes',
@@ -103,8 +104,31 @@ export const routes: Routes = [
       },
       {
         path: 'usuarios',
-        component: Users,
         data: { breadcrumb: 'Usuários', title: 'Usuários', routes: ['usuarios'] },
+        children: [
+          {
+            path: '',
+            component: Users,
+          },
+          {
+            path: 'novo',
+            component: UserForm,
+            data: {
+              breadcrumb: 'Usuários/Novo',
+              title: 'Novo Usuário',
+              routes: ['usuarios', 'novo'],
+            },
+          },
+          {
+            path: ':id',
+            component: UserForm,
+            data: {
+              breadcrumb: 'Usuários/Editar',
+              title: 'Editar Usuário',
+              routes: ['usuarios', ':id'],
+            },
+          },
+        ],
       },
       {
         path: 'perfil',

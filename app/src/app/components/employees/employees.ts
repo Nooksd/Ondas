@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { HeaderService } from 'app/services/header.service';
-import { ModalService } from 'app/services/model.service';
+import { ModalService } from 'app/services/modal.service';
 import { HeaderButtonActionComponent } from 'app/shared/header-button-action.component';
 import {
   activateEmployee,
@@ -72,10 +72,6 @@ export class Employees {
 
     this.store.select(selectEmployeePaginationInfo).subscribe((paginationInfo) => {
       this.pagingInfo.set(paginationInfo);
-    });
-
-    this.store.select(selectEmployees).subscribe((employees) => {
-      this.employees.set(employees);
     });
 
     this.store.select(selectEmployeeLoading).subscribe((loading) => {

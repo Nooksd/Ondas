@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { HeaderService } from 'app/services/header.service';
-import { ModalService } from 'app/services/model.service';
+import { ModalService } from 'app/services/modal.service';
 import { HeaderButtonActionComponent } from 'app/shared/header-button-action.component';
 import { deleteCustomer, loadCustomers } from 'app/store/customer/customer.actions';
 import {
@@ -68,10 +68,6 @@ export class Customers {
       this.pagingInfo.set(paginationInfo);
     });
 
-    this.store.select(selectCustomers).subscribe((customers) => {
-      this.customers.set(customers);
-    });
-
     this.store.select(selectCustomerLoading).subscribe((loading) => {
       this.isLoading.set(loading);
     });
@@ -95,7 +91,6 @@ export class Customers {
   }
 
   searchCustomers() {
-    console.log(this.filter());
     this.store.dispatch(loadCustomers({ query: this.filter() }));
   }
 

@@ -1,1 +1,127 @@
-<p>users works!</p>
+<div class="users-filters">
+  <div class="filter-group">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <div class="search-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Nome do usuario"
+          [value]="filter().q"
+          (input)="updateFilter('q', $event)"
+        />
+      </div>
+      <button (click)="searchUsers()" class="btn-search">Buscar usuarios</button>
+    </div>
+
+    <div class="page-size-container">
+      <label class="page-size-label">Itens por página:</label>
+      <select
+        class="page-size-select"
+        [value]="filter().size"
+        (change)="updateFilter('size', $event)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="users-table-container">
+  <div class="table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th class="th-usuario">Usuário</th>
+          <th class="th-email">Email</th>
+          <th class="th-numero">Roles</th>
+          <th class="th-numero">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (users() && users()!.length > 0) { @for (user of users()!; track user.id) {
+        <tr class="table-row">
+          <td class="td-usuario">
+            <div class="user-name">{{ user.userName }}</div>
+          </td>
+          <td class="td-email">
+            <div class="user-email">{{ user.email }}</div>
+          </td>
+          <td class="td-roles">
+            @if(user.roles) { @for(role of user.roles; track role) {
+            <div class="user-role">{{ role }}</div>
+            } }
+          </td>
+          <td class="td-actions">
+            <div class="action-buttons">
+              <button
+                class="action-btn btn-edit"
+                (click)="editUser(user.id!)"
+                title="Editar usuario"
+              >
+                <div class="icon-edit"></div>
+              </button>
+              <button
+                class="action-btn btn-info"
+                (click)="deleteUser(user.id!)"
+                title="Excluir usuario"
+              >
+                <div class="icon-delete"></div>
+              </button>
+              <button class="text-btn" (click)="addRole(user.id!)" title="Adicionar cargo">
+                <div class="icon-tag-plus"></div>
+              </button>
+              <button class="text-btn" (click)="removeRole(user.id!)" title="Remover cargo">
+                <div class="icon-tag-minus"></div>
+              </button>
+              <button class="text-btn" (click)="changePassword(user.id!)" title="Alterar senha">
+                Alterar Senha
+              </button>
+            </div>
+          </td>
+        </tr>
+        } } @else {
+        <tr class="no-data-row">
+          <td colspan="6" class="no-data-cell">
+            <div class="no-data-content">
+              <div class="icon-users"></div>
+              <p class="no-data-message">Nenhum usuário encontrado</p>
+              <p class="no-data-subtitle">Tente ajustar os filtros ou adicione um novo usuario</p>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (pagingInfo() && pagingInfo()!.totalCount > 0) {
+<div class="pagination-container">
+  <div class="pagination-info">
+    <span class="pagination-text">
+      Mostrando {{ getStartItem() }} a {{ getEndItem() }} de
+      {{ pagingInfo()!.totalCount }} resultados
+    </span>
+  </div>
+
+  <div class="pagination-controls">
+    <div class="pagination-pages">
+      @for (page of getVisiblePages(); track page) {
+      <button
+        class="pagination-page"
+        [class.active]="page === filter().page"
+        (click)="changePage(page)"
+      >
+        {{ page }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+}

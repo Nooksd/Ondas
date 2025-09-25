@@ -1,0 +1,297 @@
+@use 'tailwindcss';
+
+.users-filters {
+  @apply bg-white rounded-2xl py-4 px-10 shadow-sm mb-10;
+
+  .filter-group {
+    @apply flex items-center justify-between gap-4 flex-wrap;
+
+    .search-container {
+      @apply flex items-center gap-4 flex-1;
+
+      .search-input-wrapper {
+        @apply relative flex-1 max-w-md;
+
+        .search-icon {
+          @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4;
+          color: var(--color-primary-1);
+        }
+
+        .search-input {
+          @apply w-full pl-10 pr-4 py-2 border rounded-lg transition-all;
+          border-color: var(--color-primary-3);
+          color: var(--color-primary-1);
+
+          &:focus {
+            @apply outline-none;
+            border-color: var(--color-primary-1);
+          }
+
+          &::placeholder {
+            color: var(--color-primary-3);
+          }
+        }
+      }
+
+      .btn-search {
+        @apply px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap;
+        background-color: var(--color-primary-1);
+        color: white;
+
+        &:hover {
+          background-color: var(--color-primary-2);
+        }
+      }
+    }
+
+    .page-size-container {
+      @apply flex items-center gap-2;
+
+      .page-size-label {
+        @apply text-sm font-medium whitespace-nowrap;
+        color: var(--color-primary-2);
+      }
+
+      .page-size-select {
+        @apply px-3 py-2 border rounded-lg transition-all min-w-[80px];
+        color: var(--color-primary-1);
+        border-color: var(--color-primary-3);
+
+        &:focus {
+          @apply outline-none;
+          border-color: var(--color-primary-1);
+        }
+      }
+    }
+  }
+}
+
+.users-table-container {
+  @apply bg-white rounded-2xl shadow-sm overflow-hidden mb-10;
+
+  .table-wrapper {
+    @apply overflow-x-auto;
+
+    .users-table {
+      @apply w-full;
+
+      thead {
+        @apply bg-slate-50;
+
+        tr {
+          th {
+            @apply px-15 py-4 text-left text-sm font-semibold;
+            color: var(--color-primary-1);
+
+            &.th-avatar {
+              @apply w-16;
+            }
+
+            &.th-cliente {
+              @apply min-w-[200px];
+            }
+
+            &.th-email {
+              @apply min-w-[200px];
+            }
+
+            &.th-numero {
+              @apply min-w-[150px];
+            }
+
+            &.th-endereco {
+              @apply min-w-[250px];
+            }
+
+            &.th-actions {
+              @apply w-24;
+            }
+          }
+        }
+      }
+
+      tbody {
+        .table-row {
+          @apply border-t transition-colors;
+          border-color: var(--color-primary-dark);
+
+          td {
+            @apply px-15 py-4 align-middle text-sm;
+            color: var(--color-primary-1);
+
+            &.td-roles {
+              @apply flex gap-2;
+            }
+
+            &.td-actions {
+              .action-buttons {
+                @apply flex items-center gap-2;
+
+                .text-btn {
+                  @apply text-sm h-8 font-thin cursor-pointer rounded-lg px-2;
+                  background-color: var(--color-primary-1);
+                  color: white;
+                }
+
+                .action-btn {
+                  @apply w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer;
+
+                  &.btn-edit {
+                    background-color: var(--color-primary-1);
+                    color: white;
+
+                    &:hover {
+                      transform: scale(1.05);
+                    }
+
+                    .icon-edit {
+                      @apply w-4 h-4;
+                    }
+                  }
+
+                  &.btn-info {
+                    background-color: var(--color-primary-1);
+                    color: white;
+
+                    &:hover {
+                      transform: scale(1.05);
+                    }
+
+                    .icon-info {
+                      @apply w-4 h-4;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        .no-data-row {
+          .no-data-cell {
+            @apply py-16;
+
+            .no-data-content {
+              @apply flex flex-col items-center gap-4;
+              .no-data-message {
+                @apply text-lg font-medium;
+                color: var(--color-primary-2);
+              }
+
+              .no-data-subtitle {
+                @apply text-sm;
+                color: var(--color-primary-3);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.pagination-container {
+  @apply bg-white rounded-2xl p-6 shadow-sm flex items-center justify-between mb-10;
+
+  .pagination-info {
+    .pagination-text {
+      @apply text-sm font-medium;
+      color: var(--color-primary-2);
+    }
+  }
+
+  .pagination-controls {
+    @apply flex items-center gap-2;
+
+    .pagination-btn {
+      @apply w-8 h-8 rounded-lg flex items-center justify-center transition-all;
+
+      .icon-chevron-left,
+      .icon-chevron-right,
+      .icon-chevron-double-left,
+      .icon-chevron-double-right {
+        @apply w-4 h-4;
+      }
+    }
+
+    .pagination-pages {
+      @apply flex items-center gap-1 mx-2;
+
+      .pagination-page {
+        @apply w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-all;
+        color: var(--color-primary-1);
+
+        &:hover {
+          background-color: var(--color-primary-2);
+          color: white;
+        }
+
+        &.active {
+          background-color: var(--color-primary-1);
+          color: white;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .users-page {
+    @apply p-4 space-y-4;
+  }
+
+  .users-filters {
+    @apply p-4;
+
+    .filter-group {
+      @apply flex-col items-stretch gap-4;
+
+      .search-container {
+        @apply flex-col;
+
+        .search-input-wrapper {
+          @apply max-w-none;
+        }
+      }
+    }
+  }
+
+  .pagination-container {
+    @apply p-4 flex-col gap-4;
+
+    .pagination-controls {
+      @apply justify-center;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .users-header {
+    .header-content {
+      @apply flex-col gap-4 items-stretch;
+
+      .btn-add-user {
+        @apply justify-center;
+      }
+    }
+  }
+
+  .users-table-container {
+    .table-wrapper {
+      .users-table {
+        @apply min-w-[700px];
+      }
+    }
+  }
+
+  .pagination-container {
+    .pagination-controls {
+      .pagination-pages {
+        @apply hidden;
+      }
+    }
+  }
+}
