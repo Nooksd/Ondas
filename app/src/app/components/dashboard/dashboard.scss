@@ -147,7 +147,7 @@
 
     .weekday-label {
       @apply text-xs font-medium text-center;
-      color: #64748b;
+      color: var(--color-primary-1);
     }
   }
 

@@ -27,6 +27,7 @@ import { Portuguese } from 'flatpickr/dist/l10n/pt';
     `
       .flatpickr-input {
         padding: 8px 12px;
+        color: #003392;
         box-shadow: 0 3px 7px 0 rgba(23, 109, 198, 0.2);
         border-radius: 15px;
         min-width: 200px;

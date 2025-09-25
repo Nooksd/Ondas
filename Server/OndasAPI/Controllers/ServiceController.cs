@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OndasAPI.DTOs;
 using OndasAPI.Models;
-using OndasAPI.Pagination;
 using OndasAPI.Repositories.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace OndasAPI.Controllers;
 
@@ -17,9 +17,10 @@ public class ServiceController(IUnitOfWork unitOfWork) : ControllerBase
 
     [Authorize("Viewer")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetServices([FromQuery] PaginationParameters pagination, int? customerId, int? teamId)
+    public async Task<ActionResult<IEnumerable<ServiceDTO>>> GetServices([FromQuery, Required] DateTime initialDate,
+        [FromQuery, Required] DateTime finalDate, int? customerId, int? teamId)
     {
-        var services = await _unitOfWork.ServiceRepository.GetServicesAsync(pagination, customerId, teamId);
+        var services = await _unitOfWork.ServiceRepository.GetServicesAsync(initialDate, finalDate, customerId, teamId);
 
         var servicesDto = services.Adapt<IEnumerable<ServiceDTO>>();
 

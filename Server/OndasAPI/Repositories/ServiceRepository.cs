@@ -1,19 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OndasAPI.Context;
 using OndasAPI.Models;
-using OndasAPI.Pagination;
 using OndasAPI.Repositories.Interfaces;
 
 namespace OndasAPI.Repositories;
 
 public class ServiceRepository(AppDbContext context) : Repository<Service>(context), IServiceRepository
 {
-    public async Task<PagedList<Service>> GetServicesAsync(PaginationParameters pagination, int? customerId = null, int? teamId = null)
+    public async Task<IEnumerable<Service>> GetServicesAsync(DateTime initialDate, DateTime finalDate, int? customerId = null, int? teamId = null)
     {
         var query = GetAll()
                     .Include(s => s.Customer)
                     .Include(s => s.Team)
                     .AsQueryable();
+
+        var startDate = initialDate.Date;
+        var endDate = finalDate.Date.AddDays(1).AddTicks(-1);
+
+        query = query.Where(q => q.ServiceDate >= startDate && q.ServiceDate <= endDate);
 
         if (customerId.HasValue && customerId.Value > 0)
         {
@@ -27,9 +31,9 @@ public class ServiceRepository(AppDbContext context) : Repository<Service>(conte
 
         query = query.OrderBy(s => s.ServiceDate);
 
-        var paginatedServices = await PagedList<Service>.ToPagedListAsync(query, pagination.Page, pagination.Size);
+        var services = await query.ToListAsync();
 
-        return paginatedServices;
+        return services;
     }
 
     public async Task<Service?> GetServiceWithIncludesAsync(int id)

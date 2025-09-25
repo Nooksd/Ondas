@@ -61,6 +61,9 @@ export class ReceitasChart {
         border: {
           display: false,
         },
+        ticks: {
+          color: '#176dc6',
+        },
       },
       y: {
         grid: {
@@ -70,6 +73,7 @@ export class ReceitasChart {
           display: false,
         },
         ticks: {
+          color: '#176dc6',
           callback: (value) => `R$ ${Number(value).toLocaleString('pt-BR')}`,
         },
       },
