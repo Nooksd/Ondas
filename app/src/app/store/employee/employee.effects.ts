@@ -1,122 +1,181 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import * as AuthActions from './employee.actions';
-import { AuthService } from './employee.service';
-import { User } from './employee.state';
-import { Router } from '@angular/router';
+import * as EmployeeActions from './employee.actions';
+import { EmployeeService } from './employee.service';
+import { EmployeeDTO } from './employee.state';
 import { HotToastService } from '@ngxpert/hot-toast';
 
 @Injectable()
-export class AuthEffects {
+export class EmployeeEffects {
   private actions$ = inject(Actions);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private employeeService = inject(EmployeeService);
   private toast = inject(HotToastService);
 
-  login$ = createEffect(() =>
+  loadEmployees$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.login),
+      ofType(EmployeeActions.loadEmployees),
       mergeMap((action) =>
-        this.authService.login(action.credentials).pipe(
+        this.employeeService.getEmployees(action.query).pipe(
           this.toast.observe({
-            loading: 'Realizando login...',
-            success: 'Login realizado com sucesso!',
-            error: 'Falha no login, verifique suas credenciais',
+            loading: 'Buscando funcionários...',
+            success: 'Funcionários carregadas com sucesso!',
+            error: 'Erro ao carregar funcionários',
           }),
-          map((user: User) => AuthActions.loginSuccess({ user })),
+          map((response) => {
+            return EmployeeActions.loadEmployeesSuccess({
+              employees: response.employees,
+              pagination: response.metadata,
+            });
+          }),
           catchError((error) =>
-            of(AuthActions.loginFailure({ error: error.message || 'Erro no login' }))
+            of(
+              EmployeeActions.loadEmployeesFailure({
+                error: error.message || 'Erro ao carregar funcionários',
+              })
+            )
           )
         )
       )
     )
   );
 
-  loginSuccess$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.loginSuccess),
-        tap(() => {
-          this.router.navigate(['/dashboard']);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  refreshToken$ = createEffect(() =>
+  loadEmployee$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.refreshToken),
-      mergeMap(() =>
-        this.authService.refreshToken().pipe(
-          map(() => AuthActions.refreshTokenSuccess()),
+      ofType(EmployeeActions.loadEmployee),
+      mergeMap((action) =>
+        this.employeeService.getEmployee(action.id).pipe(
+          this.toast.observe({
+            loading: 'Buscando funcionário...',
+            success: 'Funcionário carregado com sucesso!',
+            error: 'Erro ao carregar funcionário',
+          }),
+          map((employee: EmployeeDTO) => EmployeeActions.loadEmployeeSuccess({ employee })),
           catchError((error) =>
-            of(AuthActions.refreshTokenFailure({ error: error.message || 'Erro ao renovar token' }))
+            of(
+              EmployeeActions.loadEmployeeFailure({
+                error: error.message || 'Erro ao carregar funcionário',
+              })
+            )
           )
         )
       )
     )
   );
 
-  refreshTokenFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.refreshTokenFailure),
-        tap(() => {
-          this.router.navigate(['/login']);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  getMe$ = createEffect(() =>
+  createEmployee$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.getMe),
-      mergeMap(() =>
-        this.authService.getMe().pipe(
-          map((user: User) => AuthActions.getMeSuccess({ user })),
+      ofType(EmployeeActions.createEmployee),
+      mergeMap((action) =>
+        this.employeeService.createEmployee(action.employee).pipe(
+          this.toast.observe({
+            loading: 'Criando funcionário...',
+            success: 'Funcionário criado com sucesso!',
+            error: 'Erro ao criar funcionário',
+          }),
+          map((employee: EmployeeDTO) => EmployeeActions.createEmployeeSuccess({ employee })),
           catchError((error) =>
-            of(AuthActions.getMeFailure({ error: error.message || 'Erro ao buscar usuário' }))
+            of(
+              EmployeeActions.createEmployeeFailure({
+                error: error.message || 'Erro ao criar funcionário',
+              })
+            )
           )
         )
       )
     )
   );
 
-  getMeFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.getMeFailure),
-        tap(() => {
-          this.router.navigate(['/login']);
-        })
-      ),
-    { dispatch: false }
-  );
-
-  logout$ = createEffect(() =>
+  updateEmployee$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.logout),
-      mergeMap(() =>
-        this.authService.logout().pipe(
-          map(() => AuthActions.logoutSuccess()),
+      ofType(EmployeeActions.updateEmployee),
+      mergeMap((action) =>
+        this.employeeService.updateEmployee(action.id, action.employee).pipe(
+          this.toast.observe({
+            loading: 'Atualizando funcionário...',
+            success: 'Funcionário atualizado com sucesso!',
+            error: 'Erro ao atualizar funcionário',
+          }),
+          map((employee: EmployeeDTO) => EmployeeActions.updateEmployeeSuccess({ employee })),
           catchError((error) =>
-            of(AuthActions.logoutFailure({ error: error.message || 'Erro no logout' }))
+            of(
+              EmployeeActions.updateEmployeeFailure({
+                error: error.message || 'Erro ao atualizar funcionário',
+              })
+            )
           )
         )
       )
     )
   );
 
-  logoutSuccess$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.logoutSuccess),
-        tap(() => {
-          this.router.navigate(['/login']);
-        })
-      ),
-    { dispatch: false }
+  activateEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.activateEmployee),
+      mergeMap((action) =>
+        this.employeeService.activateEmployee(action.id).pipe(
+          this.toast.observe({
+            loading: 'Ativando funcionário...',
+            success: 'Funcionário ativado com sucesso!',
+            error: 'Erro ao ativar funcionário',
+          }),
+          map((employee: EmployeeDTO) => EmployeeActions.activateEmployeeSuccess({ employee })),
+          catchError((error) =>
+            of(
+              EmployeeActions.activateEmployeeFailure({
+                error: error.message || 'Erro ao ativar funcionário',
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
+  deactivateEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.deactivateEmployee),
+      mergeMap((action) =>
+        this.employeeService.deactivateEmployee(action.id).pipe(
+          this.toast.observe({
+            loading: 'Desativando funcionário...',
+            success: 'Funcionário desativado com sucesso!',
+            error: 'Erro ao desativar funcionário',
+          }),
+          map((employee: EmployeeDTO) => EmployeeActions.deactivateEmployeeSuccess({ employee })),
+          catchError((error) =>
+            of(
+              EmployeeActions.deactivateEmployeeFailure({
+                error: error.message || 'Erro ao desativar funcionário',
+              })
+            )
+          )
+        )
+      )
+    )
+  );
+
+  deleteEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(EmployeeActions.deleteEmployee),
+      mergeMap((action) =>
+        this.employeeService.deleteEmployee(action.id).pipe(
+          this.toast.observe({
+            loading: 'Excluindo funcionário...',
+            success: 'Funcionário excluído com sucesso!',
+            error: 'Erro ao excluir funcionário',
+          }),
+          map(() => EmployeeActions.deleteEmployeeSuccess({ id: action.id })),
+          catchError((error) =>
+            of(
+              EmployeeActions.deleteEmployeeFailure({
+                error: error.message || 'Erro ao excluir funcionário',
+              })
+            )
+          )
+        )
+      )
+    )
   );
 }

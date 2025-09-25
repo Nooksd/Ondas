@@ -13,7 +13,6 @@ import {
 import {
   selectSelectedCustomer,
   selectCustomerLoading,
-  selectCustomerError,
 } from 'app/store/customer/customer.selectors';
 import { CustomerDTO } from 'app/store/customer/customer.state';
 import { takeWhile } from 'rxjs/operators';

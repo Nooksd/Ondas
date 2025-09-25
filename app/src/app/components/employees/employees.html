@@ -1,1 +1,144 @@
-<p>employees works!</p>
+<div class="employees-filters">
+  <div class="filter-group">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <div class="search-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Nome do funcionário"
+          [value]="filter().q"
+          (input)="updateFilter('q', $event)"
+        />
+      </div>
+      <div class="active-input-wrapper">
+        <div class="active-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input
+          id="isActive"
+          type="checkbox"
+          [checked]="filter().isActive"
+          class="active-input"
+          (input)="updateIsActive($event.target.checked)"
+        />
+        Mostrar ativos
+      </div>
+      <button (click)="searchEmployees()" class="btn-search">Buscar funcionários</button>
+    </div>
+
+    <div class="page-size-container">
+      <label class="page-size-label">Itens por página:</label>
+      <select
+        class="page-size-select"
+        [value]="filter().size"
+        (change)="updateFilter('size', $event)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="employees-table-container">
+  <div class="table-wrapper">
+    <table class="employees-table">
+      <thead>
+        <tr>
+          <th class="th-funcionário">Funcionário</th>
+          <th class="th-role">Cargo</th>
+          <th class="th-numero">CPF</th>
+          <th class="th-salary">Salário</th>
+          <th class="th-actions">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (employees() && employees()!.length > 0) { @for (employee of employees()!; track
+        employee.id) { @if(employee.isActive === filter().isActive) {
+
+        <tr class="table-row">
+          <td class="td-funcionário">
+            <div class="employee-name">{{ employee.name }}</div>
+          </td>
+          <td class="td-role">
+            <div class="employee-role">{{ employee.role }}</div>
+          </td>
+          <td class="td-numero">
+            <div class="employee-phone">{{ employee.cpf }}</div>
+          </td>
+          <td class="td-salary">
+            <div class="employee-address">{{ formatSalary(employee.salary) }}</div>
+          </td>
+          <td class="td-actions">
+            <div class="action-buttons">
+              <button
+                class="action-btn btn-edit"
+                (click)="editEmployee(employee.id!)"
+                title="Editar funcionário"
+              >
+                <div class="icon-edit"></div>
+              </button>
+              <button
+                class="action-btn btn-info"
+                (click)="deleteEmployee(employee.id!)"
+                title="Ver detalhes"
+              >
+                <div class="icon-delete"></div>
+              </button>
+              <button
+                class="action-btn btn-toggle"
+                (click)="toggleEmployeeStatus(employee.id!, employee.isActive!)"
+                title="Ativar/Desativar"
+              >
+                <div class="icon-size"></div>
+              </button>
+            </div>
+          </td>
+        </tr>
+        } } } @else {
+        <tr class="no-data-row">
+          <td colspan="6" class="no-data-cell">
+            <div class="no-data-content">
+              <div class="icon-users"></div>
+              <p class="no-data-message">Nenhum funcionário encontrado</p>
+              <p class="no-data-subtitle">
+                Tente ajustar os filtros ou adicione um novo funcionário
+              </p>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (pagingInfo() && pagingInfo()!.totalCount > 0) {
+<div class="pagination-container">
+  <div class="pagination-info">
+    <span class="pagination-text">
+      Mostrando {{ getStartItem() }} a {{ getEndItem() }} de
+      {{ pagingInfo()!.totalCount }} resultados
+    </span>
+  </div>
+
+  <div class="pagination-controls">
+    <div class="pagination-pages">
+      @for (page of getVisiblePages(); track page) {
+      <button
+        class="pagination-page"
+        [class.active]="page === filter().page"
+        (click)="changePage(page)"
+      >
+        {{ page }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+}

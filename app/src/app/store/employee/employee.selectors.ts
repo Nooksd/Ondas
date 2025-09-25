@@ -1,18 +1,32 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { AuthState } from './employee.state';
+import { EmployeeState } from './employee.state';
 
-export const selectAuthState = createFeatureSelector<AuthState>('auth');
+export const selectEmployeeState = createFeatureSelector<EmployeeState>('employee');
 
-export const selectAuthLoading = createSelector(
-  selectAuthState,
-  (state: AuthState) => state.loading
+export const selectEmployees = createSelector(
+  selectEmployeeState,
+  (state: EmployeeState) => state.employees
 );
 
-export const selectAuthError = createSelector(selectAuthState, (state: AuthState) => state.error);
-
-export const selectIsAuthenticated = createSelector(
-  selectAuthState,
-  (state: AuthState) => state.isAuthenticated
+export const selectSelectedEmployee = createSelector(
+  selectEmployeeState,
+  (state: EmployeeState) => state.selectedEmployee
 );
 
-export const selectUser = createSelector(selectAuthState, (state: AuthState) => state.user);
+export const selectEmployeeLoading = createSelector(
+  selectEmployeeState,
+  (state: EmployeeState) => state.loading
+);
+
+export const selectEmployeeError = createSelector(
+  selectEmployeeState,
+  (state: EmployeeState) => state.error
+);
+
+export const selectEmployeePaginationInfo = createSelector(
+  selectEmployeeState,
+  (state: EmployeeState) => state.pagination
+);
+
+export const selectEmployeeById = (id: number) =>
+  createSelector(selectEmployees, (employees) => employees.find((employee) => employee.id === id));

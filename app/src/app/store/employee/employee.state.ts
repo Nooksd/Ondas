@@ -1,24 +1,51 @@
-export interface LoginDTO {
-  email: string;
-  password: string;
-}
-
-export interface User {
-  id: string;
+export interface EmployeeDTO {
+  id?: number;
   name: string;
-  email: string;
+  role: string;
+  cpf: string;
+  salary: number;
+  isActive: boolean;
 }
 
-export interface AuthState {
+export interface PaginationDTO {
+  currentPage: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface EmployeesResponseDTO {
+  employees: EmployeeDTO[];
+  metadata: PaginationDTO;
+}
+
+export interface EmployeeFilters {
+  page?: number;
+  size?: number;
+  q?: string;
+  isActive?: boolean;
+}
+
+export interface EmployeeState {
+  employees: EmployeeDTO[];
+  selectedEmployee: EmployeeDTO | null;
   loading: boolean;
   error: string | null;
-  isAuthenticated: boolean;
-  user: User | null;
+  pagination: PaginationDTO | null;
+  filters: EmployeeFilters;
 }
 
-export const initialAuthState: AuthState = {
+export const initialEmployeeState: EmployeeState = {
+  employees: [],
+  selectedEmployee: null,
   loading: false,
   error: null,
-  isAuthenticated: false,
-  user: null,
+  pagination: null,
+  filters: {
+    page: 1,
+    size: 10,
+    q: '',
+  },
 };
