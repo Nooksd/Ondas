@@ -20,7 +20,6 @@ export class DashboardEffects {
         this.dashboardService.getDashboardStats(action.query).pipe(
           this.toast.observe({
             loading: 'Buscando estatísticas...',
-            success: 'Estatísticas carregadas com sucesso!',
             error: 'Erro ao carregar estatísticas',
           }),
           map((stats: DashboardStatsDTO) =>

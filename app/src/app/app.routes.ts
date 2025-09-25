@@ -15,6 +15,8 @@ import { Teams } from '@components/teams/teams';
 import { Users } from '@components/users/users';
 import { EmployeeForm } from '@components/employees/employee-form/employee-form';
 import { UserForm } from '@components/users/user-form/user-form';
+import { ServiceForm } from '@components/services/service-form/service-form';
+import { TeamForm } from '@components/teams/team-form/team-form';
 
 export const routes: Routes = [
   {
@@ -38,8 +40,31 @@ export const routes: Routes = [
       },
       {
         path: 'servicos',
-        component: Services,
         data: { breadcrumb: 'Serviços', title: 'Serviços', routes: ['servicos'] },
+        children: [
+          {
+            path: '',
+            component: Services,
+          },
+          {
+            path: 'novo',
+            component: ServiceForm,
+            data: {
+              breadcrumb: 'Serviços/Novo',
+              title: 'Novo Serviço',
+              routes: ['servicos', 'novo'],
+            },
+          },
+          {
+            path: ':id',
+            component: ServiceForm,
+            data: {
+              breadcrumb: 'Serviços/Editar',
+              title: 'Editar Serviço',
+              routes: ['servicos', ':id'],
+            },
+          },
+        ],
       },
       {
         path: 'clientes',
@@ -99,8 +124,31 @@ export const routes: Routes = [
       },
       {
         path: 'equipes',
-        component: Teams,
         data: { breadcrumb: 'Equipes', title: 'Equipes', routes: ['equipes'] },
+        children: [
+          {
+            path: '',
+            component: Teams,
+          },
+          {
+            path: 'novo',
+            component: TeamForm,
+            data: {
+              breadcrumb: 'Equipes/Novo',
+              title: 'Nova Equipe',
+              routes: ['equipes', 'novo'],
+            },
+          },
+          {
+            path: ':id',
+            component: TeamForm,
+            data: {
+              breadcrumb: 'Equipes/Editar',
+              title: 'Editar Equipe',
+              routes: ['equipes', ':id'],
+            },
+          },
+        ],
       },
       {
         path: 'usuarios',

@@ -1,1 +1,134 @@
-<p>teams works!</p>
+<div class="teams-filters">
+  <div class="filter-group">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <div class="search-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Nome da equipe"
+          [value]="filter().q"
+          (input)="updateFilter('q', $event)"
+        />
+      </div>
+      <div class="active-input-wrapper">
+        <div class="active-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input
+          id="isActive"
+          type="checkbox"
+          [checked]="filter().isActive"
+          class="active-input"
+          (input)="updateIsActive($event.target.checked)"
+        />
+        Mostrar ativos
+      </div>
+      <button (click)="searchTeams()" class="btn-search">Buscar equipes</button>
+    </div>
+
+    <div class="page-size-container">
+      <label class="page-size-label">Itens por página:</label>
+      <select
+        class="page-size-select"
+        [value]="filter().size"
+        (change)="updateFilter('size', $event)"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="teams-table-container">
+  <div class="table-wrapper">
+    <table class="teams-table">
+      <thead>
+        <tr>
+          <th class="th-equipe">Nome da equipe</th>
+          <th class="th-email">Quantidade de funcionários</th>
+          <th class="th-actions">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredTeams() && filteredTeams()!.length > 0) { @for (team of filteredTeams()!; track
+        team.id) {
+
+        <tr class="table-row">
+          <td class="td-equipe">
+            <div class="team-name">{{ team.name }}</div>
+          </td>
+          <td class="td-email">
+            <div class="team-email">{{ team.teamMembers.length }}</div>
+          </td>
+          <td class="td-actions">
+            <div class="action-buttons">
+              <button
+                class="action-btn btn-edit"
+                (click)="editTeam(team.id!)"
+                title="Editar equipe"
+              >
+                <div class="icon-edit"></div>
+              </button>
+              <button
+                class="action-btn btn-info"
+                (click)="deleteTeam(team.id!)"
+                title="Ver detalhes"
+              >
+                <div class="icon-delete"></div>
+              </button>
+              <button
+                class="action-btn btn-toggle"
+                (click)="toggleTeamStatus(team.id!, team.isActive!)"
+                title="Ativar/Desativar"
+              >
+                <div class="icon-size"></div>
+              </button>
+            </div>
+          </td>
+        </tr>
+        } } @else {
+        <tr class="no-data-row">
+          <td colspan="6" class="no-data-cell">
+            <div class="no-data-content">
+              <div class="icon-users"></div>
+              <p class="no-data-message">Nenhuma equipe encontrada</p>
+              <p class="no-data-subtitle">Tente ajustar os filtros ou adicione uma nova equipe</p>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (pagingInfo() && pagingInfo()!.totalCount > 0 && filteredTeams()!.length > 0) {
+<div class="pagination-container">
+  <div class="pagination-info">
+    <span class="pagination-text">
+      Mostrando {{ getStartItem() }} a {{ getEndItem() }} de
+      {{ pagingInfo()!.totalCount }} resultados
+    </span>
+  </div>
+
+  <div class="pagination-controls">
+    <div class="pagination-pages">
+      @for (page of getVisiblePages(); track page) {
+      <button
+        class="pagination-page"
+        [class.active]="page === filter().page"
+        (click)="changePage(page)"
+      >
+        {{ page }}
+      </button>
+      }
+    </div>
+  </div>
+</div>
+}

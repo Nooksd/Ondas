@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { HeaderService } from 'app/services/header.service';
@@ -181,4 +181,8 @@ export class Employees {
   formatSalary(salary: number) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(salary);
   }
+
+  filteredEmployees = computed(() =>
+    this.employees() ? this.employees()!.filter((t) => t.isActive === this.filter().isActive) : []
+  );
 }

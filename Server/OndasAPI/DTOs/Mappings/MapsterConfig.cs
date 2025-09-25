@@ -15,12 +15,6 @@ public class MapsterConfig
                     : src.TeamMembers.Select(tm => new TeamMemberDTO
                     {
                         EmployeeId = tm.EmployeeId,
-                        Employee = tm.Employee == null ? null : new EmployeeDTO
-                        {
-                            Id = tm.Employee.Id,
-                            Name = tm.Employee.Name,
-                            Role = tm.Employee.Role
-                        }
                     }).ToList());
         TypeAdapterConfig<TeamDTO, Team>.NewConfig().IgnoreNullValues(true);
 

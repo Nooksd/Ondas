@@ -58,8 +58,8 @@
         </tr>
       </thead>
       <tbody>
-        @if (employees() && employees()!.length > 0) { @for (employee of employees()!; track
-        employee.id) { @if(employee.isActive === filter().isActive) {
+        @if (filteredEmployees() && filteredEmployees()!.length > 0) { @for (employee of
+        employees()!; track employee.id) {
 
         <tr class="table-row">
           <td class="td-funcionário">
@@ -100,7 +100,7 @@
             </div>
           </td>
         </tr>
-        } } } @else {
+        } } @else {
         <tr class="no-data-row">
           <td colspan="6" class="no-data-cell">
             <div class="no-data-content">
@@ -118,7 +118,7 @@
   </div>
 </div>
 
-@if (pagingInfo() && pagingInfo()!.totalCount > 0) {
+@if (pagingInfo() && pagingInfo()!.totalCount > 0 && filteredEmployees()!.length > 0) {
 <div class="pagination-container">
   <div class="pagination-info">
     <span class="pagination-text">

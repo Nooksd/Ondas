@@ -20,7 +20,6 @@ export class UserEffects {
         this.userService.getUsers(action.query).pipe(
           this.toast.observe({
             loading: 'Buscando usuários...',
-            success: 'Usuários carregadas com sucesso!',
             error: 'Erro ao carregar usuários',
           }),
           map((response) => {

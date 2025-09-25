@@ -131,7 +131,7 @@
         }
 
         &-current {
-          @apply font-medium;
+          @apply font-medium cursor-default;
           color: var(--color-primary-1);
         }
       }

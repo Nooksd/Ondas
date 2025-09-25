@@ -89,3 +89,5 @@ export const deactivateEmployeeFailure = createAction(
 export const clearError = createAction('[Employee] Clear Error');
 
 export const clearSelectedEmployee = createAction('[Employee] Clear Selected Employee');
+
+export const clearEmployees = createAction('[Employee] Clear Employees');

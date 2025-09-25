@@ -1,0 +1,112 @@
+<div class="form-container">
+  <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="team-form">
+    <div class="form-section">
+      <h2 class="section-title">Dados</h2>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="name">Nome da equipe *</label>
+          <input
+            type="text"
+            id="name"
+            class="form-input"
+            [class.error]="isFieldInvalid('name')"
+            formControlName="name"
+            placeholder="Digite o nome completo"
+          />
+          @if (getFieldError('name')) {
+          <span class="field-error">{{ getFieldError('name') }}</span>
+          }
+        </div>
+
+        @if(isEditMode()) {
+        <div class="form-field">
+          <label class="form-label" for="employee-search">Buscar Funcionários</label>
+          <div class="employee-search-container">
+            <input
+              type="text"
+              id="employee-search"
+              class="form-input"
+              [formControl]="employeeSearchControl"
+              placeholder="Digite pelo menos 3 caracteres para buscar"
+              (focus)="onSearchFocus()"
+              (blur)="onSearchBlur()"
+            />
+
+            @if (isSearchingEmployees()) {
+            <div class="search-loading">
+              <div class="loading-spinner"></div>
+            </div>
+            } @if (showSearchResults() && getFilteredSearchResults().length > 0) {
+            <div class="search-results">
+              @for (employee of getFilteredSearchResults(); track employee.id) {
+              <div class="search-result-item" (click)="onEmployeeSelect(employee)">
+                <div class="employee-info">
+                  <span class="employee-name">{{ employee.name }}</span>
+                </div>
+              </div>
+              }
+            </div>
+            } @if (showSearchResults() && getFilteredSearchResults().length === 0 &&
+            searchResults().length === 0 && !isSearchingEmployees()) {
+            <div class="search-results">
+              <div class="no-results">
+                <span>Nenhum funcionário encontrado</span>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    @if(isEditMode() && selectedTeam()?.teamMembers && selectedTeam()!.teamMembers.length > 0) {
+    <div class="form-section">
+      <h2 class="section-title">Membros da Equipe</h2>
+      <div class="team-members">
+        @for (member of selectedTeam()!.teamMembers; track member.employeeId) {
+        <div class="member-item">
+          <div class="member-info">
+            <div class="member-name">{{ member.employee?.name }}</div>
+            <div class="member-email">{{ member.employee?.role }}</div>
+          </div>
+          <button
+            type="button"
+            class="btn-remove-member"
+            (click)="onRemoveEmployee(member.employeeId)"
+            [disabled]="isLoading()"
+            title="Remover funcionário"
+          >
+            <svg
+              class="icon-x"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="goBack()" [disabled]="isLoading()">
+        Cancelar
+      </button>
+
+      <button type="submit" class="btn-submit" [disabled]="isLoading() || teamForm.invalid">
+        @if (isLoading()) {
+        <div class="loading-spinner"></div>
+        Salvando... } @else {
+        {{ isEditMode() ? 'Atualizar Equipe' : 'Criar Equipe' }}
+        }
+      </button>
+    </div>
+  </form>
+</div>

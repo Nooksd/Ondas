@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Protected } from './protected';
+import { TeamForm } from './team-form';
 
-describe('Protected', () => {
-  let component: Protected;
-  let fixture: ComponentFixture<Protected>;
+describe('TeamForm', () => {
+  let component: TeamForm;
+  let fixture: ComponentFixture<TeamForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Protected]
+      imports: [TeamForm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Protected);
+    fixture = TestBed.createComponent(TeamForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

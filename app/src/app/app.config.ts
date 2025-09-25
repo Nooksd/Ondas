@@ -24,6 +24,8 @@ import { employeeReducer } from './store/employee/employee.reducer';
 import { EmployeeEffects } from './store/employee/employee.effects';
 import { userReducer } from './store/user/user.reducer';
 import { UserEffects } from './store/user/user.effects';
+import { teamReducer } from './store/team/team.reducer';
+import { TeamEffects } from './store/team/team.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,8 +40,16 @@ export const appConfig: ApplicationConfig = {
       customer: customerReducer,
       employee: employeeReducer,
       user: userReducer,
+      team: teamReducer,
     }),
-    provideEffects([AuthEffects, DashboardEffects, CustomerEffects, EmployeeEffects, UserEffects]),
+    provideEffects([
+      AuthEffects,
+      DashboardEffects,
+      CustomerEffects,
+      EmployeeEffects,
+      UserEffects,
+      TeamEffects,
+    ]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideHttpClient(withInterceptorsFromDi()),
     {

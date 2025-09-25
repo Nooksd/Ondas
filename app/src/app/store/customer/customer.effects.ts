@@ -20,7 +20,6 @@ export class CustomerEffects {
         this.customerService.getCustomers(action.query).pipe(
           this.toast.observe({
             loading: 'Buscando clientes...',
-            success: 'Clientes carregadas com sucesso!',
             error: 'Erro ao carregar clientes',
           }),
           map((response) => {

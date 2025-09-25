@@ -20,7 +20,6 @@ export class EmployeeEffects {
         this.employeeService.getEmployees(action.query).pipe(
           this.toast.observe({
             loading: 'Buscando funcionários...',
-            success: 'Funcionários carregadas com sucesso!',
             error: 'Erro ao carregar funcionários',
           }),
           map((response) => {

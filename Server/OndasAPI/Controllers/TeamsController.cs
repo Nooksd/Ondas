@@ -90,13 +90,15 @@ public class TeamsController(IUnitOfWork unitOfWork) : ControllerBase
         var updatedTeam = _unitOfWork.TeamRepository.Update(team);
         await _unitOfWork.CommitAsync();
 
-        var updatedTeamDto = updatedTeam.Adapt<TeamDTO>();
+        var updatedTeamWithEmployees = await _unitOfWork.TeamRepository.GetTeamWithEmployeesAsync(updatedTeam.Id);
+
+        var updatedTeamDto = updatedTeamWithEmployees.Adapt<TeamDTO>();
 
         return Ok(updatedTeamDto);
     }
 
     [Authorize("Editor")]
-    [HttpPost("{teamId:int}/members/{employeeId:int}")]
+    [HttpPost("{teamId:int}/add-member/{employeeId:int}")]
     public async Task<ActionResult<TeamDTO>> AddMember(int teamId, int employeeId)
     {
         var team = await _unitOfWork.TeamRepository.GetAsync(t => t.Id == teamId);
@@ -119,7 +121,7 @@ public class TeamsController(IUnitOfWork unitOfWork) : ControllerBase
     }
 
     [Authorize("Editor")]
-    [HttpDelete("{teamId:int}/members/{employeeId:int}")]
+    [HttpPost("{teamId:int}/remove-member/{employeeId:int}")]
     public async Task<ActionResult<TeamDTO>> RemoveMember(int teamId, int employeeId)
     {
         var team = await _unitOfWork.TeamRepository.GetAsync(t => t.Id == teamId);

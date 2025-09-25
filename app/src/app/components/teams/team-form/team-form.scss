@@ -1,0 +1,236 @@
+@use 'tailwindcss';
+
+.error-alert {
+  @apply bg-red-50 border border-red-200 rounded-2xl p-4 mb-6;
+
+  .error-content {
+    @apply flex items-center gap-3;
+
+    .icon-alert-circle {
+      @apply w-5 h-5 text-red-500 flex-shrink-0;
+    }
+
+    .error-text {
+      @apply flex-1 text-red-700 text-sm;
+    }
+
+    .btn-close-error {
+      @apply w-6 h-6 rounded-lg flex items-center justify-center transition-all;
+      color: #ef4444;
+
+      &:hover {
+        background-color: #fee2e2;
+      }
+
+      .icon-x {
+        @apply w-4 h-4;
+      }
+    }
+  }
+}
+
+.form-section {
+  @apply space-y-6;
+
+  .section-title {
+    @apply text-lg font-semibold py-4 border-b;
+    color: var(--color-primary-1);
+    border-color: #f1f5f9;
+  }
+
+  .form-grid {
+    @apply grid grid-cols-1 gap-6;
+
+    .form-field-wide {
+      @apply md:col-span-2;
+    }
+  }
+}
+
+.form-field {
+  @apply space-y-2;
+
+  .form-label {
+    @apply block text-sm font-medium;
+    color: var(--color-primary-1);
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 border rounded-lg transition-all;
+    border-color: #e2e8f0;
+    background-color: #ffffff;
+
+    &:focus {
+      @apply outline-none;
+      border-color: var(--color-primary-1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    &.error {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+
+      &:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-60;
+      background-color: #f8fafc;
+    }
+  }
+
+  .field-error {
+    @apply text-sm;
+    color: #ef4444;
+  }
+}
+
+.employee-search-container {
+  @apply relative;
+
+  .search-loading {
+    @apply absolute right-3 top-1/2 transform -translate-y-1/2;
+
+    .loading-spinner {
+      @apply w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin;
+    }
+  }
+
+  .search-results {
+    @apply absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto;
+    margin-top: 4px;
+
+    .search-result-item {
+      @apply px-4 py-3 cursor-pointer transition-all border-b border-gray-100 last:border-b-0;
+
+      &:hover {
+        @apply bg-gray-50;
+      }
+
+      &:active {
+        @apply bg-gray-100;
+      }
+
+      .employee-info {
+        @apply space-y-1;
+
+        .employee-name {
+          @apply block text-sm font-medium;
+          color: var(--color-primary-1);
+        }
+
+        .employee-email {
+          @apply block text-xs text-gray-500;
+        }
+      }
+    }
+
+    .no-results {
+      @apply px-4 py-3 text-sm text-gray-500 text-center;
+    }
+  }
+}
+
+// Team Members Styles
+.team-members {
+  @apply space-y-3;
+
+  .member-item {
+    @apply flex items-center justify-between p-4 bg-gray-50 rounded-lg border;
+
+    .member-info {
+      @apply flex-1;
+
+      .member-name {
+        @apply text-sm font-medium;
+        color: var(--color-primary-1);
+      }
+
+      .member-email {
+        @apply text-xs text-gray-500 mt-1;
+      }
+    }
+
+    .btn-remove-member {
+      @apply w-8 h-8 flex items-center justify-center rounded-lg transition-all;
+      color: #ef4444;
+
+      &:hover:not(:disabled) {
+        background-color: #fee2e2;
+      }
+
+      &:active:not(:disabled) {
+        background-color: #fecaca;
+      }
+
+      &:disabled {
+        @apply cursor-not-allowed opacity-50;
+      }
+
+      .icon-x {
+        @apply w-4 h-4;
+      }
+    }
+  }
+}
+
+.form-actions {
+  @apply flex items-center justify-end gap-4 pt-6 border-t;
+  border-color: #f1f5f9;
+
+  .btn-cancel {
+    @apply px-6 py-3 rounded-lg font-medium transition-all;
+    background-color: #f8fafc;
+    color: var(--color-primary-2);
+    border: 1px solid #e2e8f0;
+
+    &:hover:not(:disabled) {
+      background-color: #f1f5f9;
+      color: var(--color-primary-1);
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  .btn-submit {
+    @apply flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all;
+    background-color: var(--color-primary-1);
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-2);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+      background-color: #94a3b8;
+
+      &:hover {
+        background-color: #94a3b8;
+        transform: none;
+      }
+    }
+
+    .icon-save {
+      @apply w-4 h-4;
+    }
+
+    .loading-spinner {
+      @apply w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin;
+    }
+  }
+}

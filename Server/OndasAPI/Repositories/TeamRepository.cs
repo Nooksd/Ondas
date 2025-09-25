@@ -50,7 +50,7 @@ public class TeamRepository(AppDbContext context) : Repository<Team>(context), I
             query = query.Where(p => p.Name.ToLower().Contains(qLower));
         }
 
-        query = query.OrderBy(p => p.Name);
+        query = query.OrderBy(p => p.Name).Include(t => t.TeamMembers);
 
 
         var paginatedTeams = await PagedList<Team>.ToPagedListAsync(query, pagination.Page, pagination.Size);

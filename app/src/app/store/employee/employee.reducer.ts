@@ -154,5 +154,10 @@ export const employeeReducer = createReducer(
   on(EmployeeActions.clearSelectedEmployee, (state) => ({
     ...state,
     selectedEmployee: null,
+  })),
+
+  on(EmployeeActions.clearEmployees, (state) => ({
+    ...state,
+    employees: [],
   }))
 );
