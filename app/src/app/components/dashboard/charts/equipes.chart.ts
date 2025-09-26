@@ -40,7 +40,7 @@ export class EquipesChart {
         {
           label: 'Horas Alocadas',
           data: entries.map(([, horas]) => horas),
-          backgroundColor: '#3b82f6',
+          backgroundColor: '#2563eb',
           barThickness: 20,
           borderRadius: 8,
           borderSkipped: false,
@@ -59,7 +59,7 @@ export class EquipesChart {
       },
       y: {
         ticks: {
-          color: '#000',
+          color: '#2563eb',
           autoSkip: false,
           maxRotation: 0,
           font: {

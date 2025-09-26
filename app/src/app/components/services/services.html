@@ -1,27 +1,79 @@
 <div class="services-filters">
   <div class="filter-group">
     <div class="search-container">
-      <div class="search-input-wrapper">
-        <div class="search-icon">
-          <div class="icon-search"></div>
-        </div>
-        <input type="text" class="search-input" placeholder="Nome do cliente" />
-      </div>
-      <div class="search-input-wrapper">
-        <div class="search-icon">
-          <div class="icon-search"></div>
-        </div>
-        <input type="text" class="search-input" placeholder="Nome do time" />
-      </div>
+      <app-search-select
+        placeholder="Selecione o cliente"
+        [options]="customerOptions"
+        [loading]="isCustomerLoading"
+        [selectedValue]="selectedCustomer"
+        (searchChange)="onCustomerSearch($event)"
+        (selectionChange)="onCustomerSelection($event)"
+      >
+      </app-search-select>
+
+      <app-search-select
+        placeholder="Selecione o time"
+        [options]="teamOptions"
+        [loading]="isTeamLoading"
+        [selectedValue]="selectedTeam"
+        (searchChange)="onTeamSearch($event)"
+        (selectionChange)="onTeamSelection($event)"
+      >
+      </app-search-select>
+
       <div class="date-container">
         <app-header-date-range-picker
           [initialEndDate]="filter().finalDate"
           [initialStartDate]="filter().initialDate"
-          [onDatesChanged]="onDatesChanged"
+          [onDatesChanged]="onDatesChanged.bind(this)"
         >
         </app-header-date-range-picker>
       </div>
-      <button (click)="searchServices()" class="btn-search">Buscar clientes</button>
     </div>
+  </div>
+</div>
+
+<div class="services-kanban">
+  <div class="kanban-board">
+    @for(column of statusColumns; track column.status) {
+    <div class="kanban-column">
+      <div class="column-header">
+        <h3>{{ column.title }}</h3>
+      </div>
+
+      <div
+        class="services-list"
+        cdkDropList
+        [id]="column.status.toString()"
+        [cdkDropListData]="column.services()"
+        [cdkDropListConnectedTo]="connectedDropLists"
+        (cdkDropListDropped)="onServiceDrop($event)"
+      >
+        @for(service of column.services(); let i = $index; track service.id) {
+        <div class="service-card" cdkDrag [cdkDragData]="service">
+          <div class="service-header">
+            {{ formatDate(service.serviceDate) }} -
+            {{ getDuration(service.serviceDate, service.serviceDuration) }}
+          </div>
+
+          <div class="service-content">
+            <div class="customer-name">{{ service.customerName }}</div>
+            <div class="team-name">{{ service.teamName }}</div>
+            <div class="service-description">{{ service.description }}</div>
+          </div>
+
+          <div class="mola-1"></div>
+          <div class="mola-2"></div>
+          <div class="mola-3"></div>
+
+          <div *cdkDragPreview class="drag-preview">
+            <div class="preview-header">{{ service.customerName }}</div>
+            <div class="preview-price">{{ formatCurrency(service.price) }}</div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
   </div>
 </div>

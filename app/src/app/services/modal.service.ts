@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core';
+import flatpickr from 'flatpickr';
+import { Portuguese } from 'flatpickr/dist/l10n/pt';
 import Swal from 'sweetalert2';
 
 @Injectable({ providedIn: 'root' })
@@ -121,6 +123,66 @@ export class ModalService {
 
     if (result.isConfirmed && result.value) {
       return result.value as string;
+    }
+    return null;
+  }
+
+  async pickDate(
+    title = 'Selecionar data',
+    confirmText = 'OK',
+    cancelText = 'Cancelar',
+    initialDate?: Date
+  ): Promise<Date | null> {
+    let fpInstance: any = null;
+
+    const result = await Swal.fire({
+      title,
+      html: `<input id="swal-datepicker" type="text" class="swal2-input" style="min-width:180px" />`,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      cancelButtonColor: '#cc3300',
+      confirmButtonColor: '#176dc6',
+      color: '#176dc6',
+      allowOutsideClick: false,
+      reverseButtons: true,
+      focusCancel: true,
+      didOpen: () => {
+        const el = document.getElementById('swal-datepicker') as HTMLInputElement | null;
+        if (!el) return;
+        fpInstance = flatpickr(el, {
+          locale: Portuguese,
+          dateFormat: 'd/m/Y',
+          defaultDate: initialDate ?? new Date(),
+          allowInput: true,
+        });
+      },
+      preConfirm: () => {
+        if (!fpInstance) {
+          Swal.showValidationMessage('Erro ao abrir o seletor de data.');
+          return null;
+        }
+        const sel: Date | undefined = fpInstance.selectedDates?.[0];
+        if (!sel) {
+          Swal.showValidationMessage('Selecione uma data!');
+          return null;
+        }
+        return sel.toISOString();
+      },
+      willClose: () => {
+        if (fpInstance) {
+          fpInstance.destroy();
+          fpInstance = null;
+        }
+      },
+    });
+
+    if (result.isConfirmed && result.value) {
+      try {
+        return new Date(result.value as string);
+      } catch {
+        return null;
+      }
     }
     return null;
   }

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ServiceDTO, ServiceFilters, PaginationDTO, ChangeStatusDTO } from './service.state';
+import { ServiceDTO, ServiceFilters, ChangeStatusDTO } from './service.state';
 
 export const loadServices = createAction(
   '[Service] Load Services',
@@ -7,7 +7,7 @@ export const loadServices = createAction(
 );
 export const loadServicesSuccess = createAction(
   '[Service] Load Services Success',
-  props<{ services: ServiceDTO[]; pagination: PaginationDTO }>()
+  props<{ services: ServiceDTO[] }>()
 );
 export const loadServicesFailure = createAction(
   '[Service] Load Services Failure',

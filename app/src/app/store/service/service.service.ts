@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { ChangeStatusDTO, ServiceDTO, ServiceFilters, ServicesResponseDTO } from './service.state';
+import { ChangeStatusDTO, ServiceDTO, ServiceFilters } from './service.state';
 import { ApiHttpClient } from '../../core/api-http-client';
 
 @Injectable({ providedIn: 'root' })
@@ -9,7 +9,7 @@ export class ServiceService {
 
   constructor(private http: ApiHttpClient) {}
 
-  getServices(query?: ServiceFilters): Observable<ServicesResponseDTO> {
+  getServices(query?: ServiceFilters): Observable<ServiceDTO[]> {
     const params: any = {};
 
     if (query?.customerId) params.customerId = query.customerId;
@@ -18,8 +18,8 @@ export class ServiceService {
     params.finalDate = query?.finalDate.toISOString().split('T')[0];
 
     return this.http
-      .get<ServicesResponseDTO>(this.baseUrl, { params })
-      .pipe(map((response: ServicesResponseDTO) => response));
+      .get<ServiceDTO[]>(this.baseUrl, { params })
+      .pipe(map((response: ServiceDTO[]) => response));
   }
 
   getService(id: number): Observable<ServiceDTO> {
@@ -35,7 +35,7 @@ export class ServiceService {
   }
 
   changeStatusService(id: number, newStatus: ChangeStatusDTO): Observable<ServiceDTO> {
-    return this.http.put<ServiceDTO>(`${this.baseUrl}/update-status/${id}`, newStatus);
+    return this.http.patch<ServiceDTO>(`${this.baseUrl}/update-status/${id}`, newStatus);
   }
 
   deleteService(id: number): Observable<ServiceDTO> {

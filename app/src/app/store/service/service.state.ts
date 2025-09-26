@@ -27,20 +27,6 @@ export interface ServiceDTO {
   paymentDate: Date | null;
 }
 
-export interface PaginationDTO {
-  currentPage: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-}
-
-export interface ServicesResponseDTO {
-  services: ServiceDTO[];
-  metadata: PaginationDTO;
-}
-
 export interface ServiceFilters {
   customerId: number | null;
   teamId: number | null;
@@ -53,7 +39,6 @@ export interface ServiceState {
   selectedService: ServiceDTO | null;
   loading: boolean;
   error: string | null;
-  pagination: PaginationDTO | null;
   filters: ServiceFilters;
 }
 
@@ -62,7 +47,6 @@ export const initialServiceState: ServiceState = {
   selectedService: null,
   loading: false,
   error: null,
-  pagination: null,
   filters: {
     customerId: null,
     teamId: null,

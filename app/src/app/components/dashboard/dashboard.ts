@@ -8,7 +8,7 @@ import { EquipesChart } from './charts/equipes.chart';
 import { StatusChart } from './charts/status.chart';
 import { ReceitasChart } from './charts/receita.chart';
 import { HeatmapChart } from './charts/heatmap.chart';
-import { HeaderDateRangePickerComponent } from 'app/shared/header-range-date-picker.component';
+import { RangeDatePickerComponent } from 'app/shared/range-date-picker.component';
 import { HeaderService } from 'app/services/header.service';
 
 @Component({
@@ -48,7 +48,7 @@ export class Dashboard {
 
   private setupHeader() {
     this.headerService.setHeaderConfig({
-      component: HeaderDateRangePickerComponent,
+      component: RangeDatePickerComponent,
       inputs: {
         initialStartDate: this.startDate(),
         initialEndDate: this.endDate(),
@@ -96,7 +96,7 @@ export class Dashboard {
   formatPercentage(value: number | null | undefined): string {
     if (value == null) return '0%';
 
-    return `${value}%`;
+    return `${value.toFixed(2)}%`;
   }
 
   private getStatusName(status: ServiceStatus): string {

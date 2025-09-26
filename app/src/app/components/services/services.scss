@@ -1,67 +1,167 @@
 @use 'tailwindcss';
 
 .services-filters {
-  @apply bg-white rounded-2xl py-4 px-10 shadow-sm mb-10;
+  @apply bg-white rounded-2xl py-6 px-8 shadow-sm mb-8;
 
   .filter-group {
-    @apply flex items-center justify-between gap-4 flex-wrap;
+    @apply flex items-center justify-between gap-6 flex-wrap;
 
     .search-container {
-      @apply flex items-center gap-4 flex-1;
+      @apply flex items-center gap-6 flex-1;
+      min-width: 600px;
 
-      .search-input-wrapper {
-        @apply relative flex-1 max-w-md;
-
-        .search-icon {
-          @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4;
-          color: var(--color-primary-1);
-        }
-
-        .search-input {
-          @apply w-full pl-10 pr-4 py-2 border rounded-lg transition-all;
-          border-color: var(--color-primary-3);
-          color: var(--color-primary-1);
-
-          &:focus {
-            @apply outline-none;
-            border-color: var(--color-primary-1);
-          }
-
-          &::placeholder {
-            color: var(--color-primary-3);
-          }
-        }
+      app-search-select {
+        @apply flex-1;
+        max-width: 250px;
       }
 
-      .btn-search {
-        @apply px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap;
-        background-color: var(--color-primary-1);
-        color: white;
+      .date-container {
+        @apply flex-shrink-0;
+      }
+    }
+  }
+}
 
-        &:hover {
-          background-color: var(--color-primary-2);
-        }
+.services-kanban {
+  @apply flex-1;
+
+  .kanban-board {
+    @apply grid grid-cols-6;
+    min-height: calc(100vh - 224px);
+  }
+
+  .kanban-column {
+    @apply flex flex-col border-l-3;
+    border-color: var(--color-primary-3);
+    min-height: 500px;
+
+    &:nth-child(6) {
+      border-right: 3px solid var(--color-primary-3);
+    }
+
+    .column-header {
+      @apply px-4 py-3 flex items-center justify-center;
+      color: var(--color-primary-1);
+
+      h3 {
+        @apply font-semibold text-sm;
       }
     }
 
-    .page-size-container {
-      @apply flex items-center gap-2;
+    .services-list {
+      @apply flex-1 p-3 space-y-3 overflow-y-auto;
+      min-height: 200px;
+      max-height: calc(100vh - 400px);
 
-      .page-size-label {
-        @apply text-sm font-medium whitespace-nowrap;
-        color: var(--color-primary-2);
+      &.cdk-drop-list-dragging {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
       }
 
-      .page-size-select {
-        @apply px-3 py-2 border rounded-lg transition-all min-w-[80px];
-        color: var(--color-primary-1);
-        border-color: var(--color-primary-3);
-
-        &:focus {
-          @apply outline-none;
-          border-color: var(--color-primary-1);
-        }
+      &.cdk-drop-list-receiving {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
       }
     }
+  }
+}
+
+.service-card {
+  @apply hover:shadow-md transition-all cursor-grabbing relative;
+  border-radius: 15px;
+  min-height: 115px;
+  background-color: var(--color-primary-1);
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  &.cdk-drag-dragging {
+    cursor: grabbing;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  }
+
+  &.cdk-drag-animating {
+    transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .mola-3,
+  .mola-2,
+  .mola-1 {
+    @apply absolute;
+    border-radius: 20px;
+    width: 30px;
+    height: 10px;
+    background-color: var(--color-primary-1);
+
+    top: 40%;
+    left: 7px;
+    transform: translate(-50%, -50%);
+  }
+  .mola-2 {
+    top: 60%;
+  }
+  .mola-3 {
+    top: 80%;
+  }
+
+  .service-header {
+    @apply flex items-center justify-center py-1 text-sm font-bold text-center;
+    color: white;
+  }
+
+  .service-content {
+    @apply flex flex-col px-10 py-4 justify-center items-center;
+    border-radius: 15px;
+    color: var(--color-primary-1);
+    background-color: var(--color-background);
+
+    .customer-name {
+      @apply text-base font-medium text-center;
+    }
+
+    .team-name {
+      @apply text-sm text-center mb-2;
+      color: var(--color-primary-2);
+    }
+
+    .service-description {
+      @apply text-sm text-center;
+    }
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.4;
+  border: 2px dashed #ccc;
+  background: transparent;
+}
+
+.drag-preview {
+  border-radius: 15px;
+  background-color: var(--color-primary-1);
+
+  .preview-header {
+    padding: 5px 10px;
+    color: var(--color-background);
+  }
+
+  .preview-price {
+    color: var(--color-primary-1);
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list {
+  &.cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }

@@ -22,11 +22,3 @@ export const selectServiceError = createSelector(
   selectServiceState,
   (state: ServiceState) => state.error
 );
-
-export const selectServicePaginationInfo = createSelector(
-  selectServiceState,
-  (state: ServiceState) => state.pagination
-);
-
-export const selectServiceById = (id: number) =>
-  createSelector(selectServices, (services) => services.find((service) => service.id === id));

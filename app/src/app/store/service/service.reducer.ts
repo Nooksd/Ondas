@@ -11,12 +11,11 @@ export const serviceReducer = createReducer(
     error: null,
   })),
 
-  on(ServiceActions.loadServicesSuccess, (state, { services, pagination }) => ({
+  on(ServiceActions.loadServicesSuccess, (state, { services }) => ({
     ...state,
     loading: false,
     error: null,
     services,
-    pagination,
   })),
 
   on(ServiceActions.loadServicesFailure, (state, { error }) => ({

@@ -37,7 +37,7 @@ import { Portuguese } from 'flatpickr/dist/l10n/pt';
     `,
   ],
 })
-export class HeaderDateRangePickerComponent implements AfterViewInit, OnDestroy {
+export class RangeDatePickerComponent implements AfterViewInit, OnDestroy {
   initialStartDate = input<Date>();
   initialEndDate = input<Date>();
   onDatesChanged = input<(event: { startDate: Date; endDate: Date }) => void>();

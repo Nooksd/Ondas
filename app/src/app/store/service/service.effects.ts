@@ -24,8 +24,7 @@ export class ServiceEffects {
           }),
           map((response) => {
             return ServiceActions.loadServicesSuccess({
-              services: response.services,
-              pagination: response.metadata,
+              services: response,
             });
           }),
           catchError((error) =>

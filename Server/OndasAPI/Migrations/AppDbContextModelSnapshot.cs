@@ -524,11 +524,10 @@ namespace OndasAPI.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("PaymentDueDate")
-                        .IsRequired()
+                    b.Property<DateTime>("PaymentDueDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
@@ -537,6 +536,9 @@ namespace OndasAPI.Migrations
 
                     b.Property<DateTime>("ServiceDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("ServiceDuration")
+                        .HasColumnType("time");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
