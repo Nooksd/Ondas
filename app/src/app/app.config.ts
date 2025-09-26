@@ -26,6 +26,8 @@ import { userReducer } from './store/user/user.reducer';
 import { UserEffects } from './store/user/user.effects';
 import { teamReducer } from './store/team/team.reducer';
 import { TeamEffects } from './store/team/team.effects';
+import { serviceReducer } from './store/service/service.reducer';
+import { ServiceEffects } from './store/service/service.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -41,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       employee: employeeReducer,
       user: userReducer,
       team: teamReducer,
+      service: serviceReducer,
     }),
     provideEffects([
       AuthEffects,
@@ -49,6 +52,7 @@ export const appConfig: ApplicationConfig = {
       EmployeeEffects,
       UserEffects,
       TeamEffects,
+      ServiceEffects,
     ]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideHttpClient(withInterceptorsFromDi()),

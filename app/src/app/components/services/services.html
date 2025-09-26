@@ -1,1 +1,27 @@
-<p>services works!</p>
+<div class="services-filters">
+  <div class="filter-group">
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <div class="search-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input type="text" class="search-input" placeholder="Nome do cliente" />
+      </div>
+      <div class="search-input-wrapper">
+        <div class="search-icon">
+          <div class="icon-search"></div>
+        </div>
+        <input type="text" class="search-input" placeholder="Nome do time" />
+      </div>
+      <div class="date-container">
+        <app-header-date-range-picker
+          [initialEndDate]="filter().finalDate"
+          [initialStartDate]="filter().initialDate"
+          [onDatesChanged]="onDatesChanged"
+        >
+        </app-header-date-range-picker>
+      </div>
+      <button (click)="searchServices()" class="btn-search">Buscar clientes</button>
+    </div>
+  </div>
+</div>

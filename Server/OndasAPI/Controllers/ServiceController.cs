@@ -86,7 +86,7 @@ public class ServiceController(IUnitOfWork unitOfWork) : ControllerBase
     }
 
     [Authorize("Editor")]
-    [HttpPatch("{id:int}/status")]
+    [HttpPatch("update-status/{id:int}")]
     public async Task<ActionResult<ServiceDTO>> ChangeStatus(int id, ChangeServiceStatusDTO payload)
     {
         var service = await _unitOfWork.ServiceRepository.GetServiceWithIncludesAsync(id);

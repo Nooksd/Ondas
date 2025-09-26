@@ -1,41 +1,11 @@
 @use 'tailwindcss';
 
-.error-alert {
-  @apply bg-red-50 border border-red-200 rounded-2xl p-4 mb-6;
-
-  .error-content {
-    @apply flex items-center gap-3;
-
-    .icon-alert-circle {
-      @apply w-5 h-5 text-red-500 flex-shrink-0;
-    }
-
-    .error-text {
-      @apply flex-1 text-red-700 text-sm;
-    }
-
-    .btn-close-error {
-      @apply w-6 h-6 rounded-lg flex items-center justify-center transition-all;
-      color: #ef4444;
-
-      &:hover {
-        background-color: #fee2e2;
-      }
-
-      .icon-x {
-        @apply w-4 h-4;
-      }
-    }
-  }
-}
-
 .form-section {
   @apply space-y-6;
 
   .section-title {
     @apply text-lg font-semibold py-4 border-b;
     color: var(--color-primary-1);
-    border-color: #f1f5f9;
   }
 
   .form-grid {
@@ -57,38 +27,32 @@
 
   .form-input {
     @apply w-full px-4 py-3 border rounded-lg transition-all;
-    border-color: #e2e8f0;
+    color: var(--color-primary-1);
+    border-color: var(--color-primary-3);
     background-color: #ffffff;
 
     &:focus {
       @apply outline-none;
       border-color: var(--color-primary-1);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
     &.error {
-      border-color: #ef4444;
+      border-color: var(--color-error);
       background-color: #fef2f2;
 
       &:focus {
-        border-color: #ef4444;
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        border-color: var(--color-error);
       }
-    }
-
-    &::placeholder {
-      color: #94a3b8;
     }
 
     &:disabled {
       @apply cursor-not-allowed opacity-60;
-      background-color: #f8fafc;
     }
   }
 
   .field-error {
     @apply text-sm;
-    color: #ef4444;
+    color: var(--color-error);
   }
 }
 
@@ -138,12 +102,12 @@
   }
 }
 
-// Team Members Styles
 .team-members {
   @apply space-y-3;
 
   .member-item {
     @apply flex items-center justify-between p-4 bg-gray-50 rounded-lg border;
+    border-color: var(--color-primary-1);
 
     .member-info {
       @apply flex-1;
@@ -154,13 +118,18 @@
       }
 
       .member-email {
-        @apply text-xs text-gray-500 mt-1;
+        @apply text-xs mt-1;
+        color: var(--color-primary-2);
       }
     }
 
     .btn-remove-member {
       @apply w-8 h-8 flex items-center justify-center rounded-lg transition-all;
-      color: #ef4444;
+      color: var(--color-error);
+
+      &:disabled {
+        @apply cursor-not-allowed opacity-50;
+      }
 
       &:hover:not(:disabled) {
         background-color: #fee2e2;
@@ -168,10 +137,6 @@
 
       &:active:not(:disabled) {
         background-color: #fecaca;
-      }
-
-      &:disabled {
-        @apply cursor-not-allowed opacity-50;
       }
 
       .icon-x {
@@ -182,14 +147,13 @@
 }
 
 .form-actions {
-  @apply flex items-center justify-end gap-4 pt-6 border-t;
-  border-color: #f1f5f9;
+  @apply flex items-center justify-end gap-4 pt-6;
 
   .btn-cancel {
     @apply px-6 py-3 rounded-lg font-medium transition-all;
     background-color: #f8fafc;
     color: var(--color-primary-2);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-primary-3);
 
     &:hover:not(:disabled) {
       background-color: #f1f5f9;
@@ -217,10 +181,10 @@
 
     &:disabled {
       @apply cursor-not-allowed opacity-50;
-      background-color: #94a3b8;
+      background-color: var(--color-primary-2);
 
       &:hover {
-        background-color: #94a3b8;
+        background-color: var(--color-primary-2);
         transform: none;
       }
     }

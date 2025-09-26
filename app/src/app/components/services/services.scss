@@ -1,0 +1,67 @@
+@use 'tailwindcss';
+
+.services-filters {
+  @apply bg-white rounded-2xl py-4 px-10 shadow-sm mb-10;
+
+  .filter-group {
+    @apply flex items-center justify-between gap-4 flex-wrap;
+
+    .search-container {
+      @apply flex items-center gap-4 flex-1;
+
+      .search-input-wrapper {
+        @apply relative flex-1 max-w-md;
+
+        .search-icon {
+          @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4;
+          color: var(--color-primary-1);
+        }
+
+        .search-input {
+          @apply w-full pl-10 pr-4 py-2 border rounded-lg transition-all;
+          border-color: var(--color-primary-3);
+          color: var(--color-primary-1);
+
+          &:focus {
+            @apply outline-none;
+            border-color: var(--color-primary-1);
+          }
+
+          &::placeholder {
+            color: var(--color-primary-3);
+          }
+        }
+      }
+
+      .btn-search {
+        @apply px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap;
+        background-color: var(--color-primary-1);
+        color: white;
+
+        &:hover {
+          background-color: var(--color-primary-2);
+        }
+      }
+    }
+
+    .page-size-container {
+      @apply flex items-center gap-2;
+
+      .page-size-label {
+        @apply text-sm font-medium whitespace-nowrap;
+        color: var(--color-primary-2);
+      }
+
+      .page-size-select {
+        @apply px-3 py-2 border rounded-lg transition-all min-w-[80px];
+        color: var(--color-primary-1);
+        border-color: var(--color-primary-3);
+
+        &:focus {
+          @apply outline-none;
+          border-color: var(--color-primary-1);
+        }
+      }
+    }
+  }
+}

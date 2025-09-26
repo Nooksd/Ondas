@@ -20,6 +20,7 @@
 
 .form-field {
   @apply space-y-2;
+  color: var(--color-primary-1);
 
   .form-label {
     @apply block text-sm font-medium;
@@ -28,8 +29,9 @@
 
   .form-input {
     @apply w-full px-4 py-3 border rounded-lg transition-all;
-    border-color: #e2e8f0;
-    background-color: #ffffff;
+    color: var(--color-primary-1);
+    border-color: var(--color-primary-3);
+    background-color: var(--color-background);
 
     &:focus {
       @apply outline-none;
@@ -38,17 +40,16 @@
     }
 
     &.error {
-      border-color: #ef4444;
+      border-color: var(--color-error);
       background-color: #fef2f2;
 
       &:focus {
-        border-color: #ef4444;
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        border-color: var(--color-error);
       }
     }
 
     &::placeholder {
-      color: #94a3b8;
+      color: var(--color-primary-2);
     }
 
     &:disabled {
@@ -59,7 +60,7 @@
 
   .field-error {
     @apply text-sm;
-    color: #ef4444;
+    color: var(--color-error);
   }
 }
 
@@ -71,7 +72,7 @@
     @apply px-6 py-3 rounded-lg font-medium transition-all;
     background-color: #f8fafc;
     color: var(--color-primary-2);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-primary-3);
 
     &:hover:not(:disabled) {
       background-color: #f1f5f9;
@@ -99,10 +100,10 @@
 
     &:disabled {
       @apply cursor-not-allowed opacity-50;
-      background-color: #94a3b8;
+      background-color: var(--color-primary-2);
 
       &:hover {
-        background-color: #94a3b8;
+        background-color: var(--color-primary-2);
         transform: none;
       }
     }

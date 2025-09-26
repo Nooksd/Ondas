@@ -80,7 +80,7 @@
             <a routerLink="/dashboard">
               <span class="breadcrumb-item">Pages</span>
             </a>
-            @for (page of breadcrumb(); let i = $index; track page) {
+            @for (page of breadcrumb(); let i = $index; track i) {
             <span class="breadcrumb-separator">/</span>
             <a routerLink="/{{ breadcrumbRoute(i) }}">
               <span
