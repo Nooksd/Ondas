@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -14,15 +14,15 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: [],
 })
 export class ReceitasChart {
-  @Input() receitaDiaria: { data: string; valor: number }[] = [];
+  @Input() receitaDiaria!: Signal<{ data: string; valor: number }[]>;
 
   chartData = computed<ChartData<'line'>>(() => {
     return {
-      labels: this.receitaDiaria.map((r) => this.formatDate(r.data)),
+      labels: this.receitaDiaria().map((r) => this.formatDate(r.data)),
       datasets: [
         {
           label: 'Receita Diária',
-          data: this.receitaDiaria.map((r) => r.valor),
+          data: this.receitaDiaria().map((r) => r.valor),
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           fill: true,

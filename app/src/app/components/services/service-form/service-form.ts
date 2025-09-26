@@ -3,7 +3,8 @@ import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { SelectOption } from 'app/shared/search-select.component';
+import { SelectOption, SearchSelectComponent } from 'app/shared/search-select.component';
+import { clearCustomers, loadCustomers } from 'app/store/customer/customer.actions';
 import { selectCustomerLoading, selectCustomers } from 'app/store/customer/customer.selectors';
 import { CustomerDTO } from 'app/store/customer/customer.state';
 import {
@@ -15,13 +16,15 @@ import {
 } from 'app/store/service/service.actions';
 import { selectSelectedService, selectServiceLoading } from 'app/store/service/service.selectors';
 import { ServiceDTO } from 'app/store/service/service.state';
+import { clearTeams, loadTeams } from 'app/store/team/team.actions';
 import { selectTeamLoading, selectTeams } from 'app/store/team/team.selectors';
 import { TeamDTO } from 'app/store/team/team.state';
 import { takeWhile } from 'rxjs/operators';
+import { SingleDatePickerComponent } from 'app/shared/date-picker.component';
 
 @Component({
   selector: 'app-service-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SearchSelectComponent, SingleDatePickerComponent],
   standalone: true,
   templateUrl: './service-form.html',
   styleUrls: ['./service-form.scss'],
@@ -117,7 +120,7 @@ export class ServiceForm implements OnInit, OnDestroy {
       teamId: ['', [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required, Validators.min(1)]],
       serviceDate: [new Date(), [Validators.required]],
-      serviceDuration: ['', [Validators.required]],
+      serviceDuration: ['', [Validators.required, this.timeSpanValidator]],
       paymentDueDate: [new Date(), [Validators.required]],
       description: ['', [Validators.required, Validators.maxLength(100)]],
       status: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
@@ -150,7 +153,55 @@ export class ServiceForm implements OnInit, OnDestroy {
     });
   }
 
+  onCustomerSearch(searchTerm: string) {
+    this.store.dispatch(
+      loadCustomers({
+        query: {
+          page: 1,
+          size: 5,
+          q: searchTerm,
+        },
+      })
+    );
+  }
+
+  onCustomerSelection(customer: SelectOption | null) {
+    this.selectedCustomer.set(customer);
+    this.serviceForm.patchValue({ customerId: customer?.id || null });
+
+    this.store.dispatch(clearCustomers());
+  }
+
+  onTeamSearch(searchTerm: string) {
+    this.store.dispatch(
+      loadTeams({
+        query: {
+          page: 1,
+          size: 5,
+          q: searchTerm,
+          isActive: true,
+        },
+      })
+    );
+  }
+
+  onTeamSelection(team: SelectOption | null) {
+    this.selectedTeam.set(team);
+    this.serviceForm.patchValue({ teamId: team?.id || null });
+
+    this.store.dispatch(clearTeams());
+  }
+
+  onServiceDateChange(event: { date: Date }) {
+    this.serviceForm.patchValue({ serviceDate: event.date });
+  }
+
+  onPaymentDueDateChange(event: { date: Date }) {
+    this.serviceForm.patchValue({ paymentDueDate: event.date });
+  }
+
   onSubmit() {
+    console.log(this.serviceForm.value);
     if (this.serviceForm.valid) {
       const formValue = this.serviceForm.value;
       const serviceData: ServiceDTO = {
@@ -177,6 +228,14 @@ export class ServiceForm implements OnInit, OnDestroy {
   isFieldInvalid(fieldName: string): boolean {
     const field = this.serviceForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  timeSpanValidator(control: any) {
+    const value = control.value;
+    if (value && !/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/.test(value)) {
+      return { invalidTimeSpan: true };
+    }
+    return null;
   }
 
   getFieldError(fieldName: string): string | null {

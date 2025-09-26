@@ -10,8 +10,8 @@ import {
   loadServices,
   changeServiceStatus,
 } from 'app/store/service/service.actions';
-import { loadCustomers } from 'app/store/customer/customer.actions';
-import { loadTeams } from 'app/store/team/team.actions';
+import { clearCustomers, loadCustomers } from 'app/store/customer/customer.actions';
+import { clearTeams, loadTeams } from 'app/store/team/team.actions';
 import { selectServiceLoading, selectServices } from 'app/store/service/service.selectors';
 import { selectCustomers, selectCustomerLoading } from 'app/store/customer/customer.selectors';
 import { selectTeams, selectTeamLoading } from 'app/store/team/team.selectors';
@@ -190,6 +190,8 @@ export class Services {
     this.selectedCustomer.set(customer);
     this.filter.update((f) => ({ ...f, customerId: customer?.id || null }));
 
+    this.store.dispatch(clearCustomers());
+
     this.searchServices();
   }
 
@@ -209,6 +211,8 @@ export class Services {
   onTeamSelection(team: SelectOption | null) {
     this.selectedTeam.set(team);
     this.filter.update((f) => ({ ...f, teamId: team?.id || null }));
+
+    this.store.dispatch(clearTeams());
 
     this.searchServices();
   }

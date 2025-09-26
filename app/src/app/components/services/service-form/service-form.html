@@ -1,50 +1,144 @@
-<div class="form-container">
-  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
-    <div class="form-section">
-      <h2 class="section-title">Dados Pessoais</h2>
+<form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
+  <div class="form-section">
+    <h2 class="section-title">Dados do Serviço</h2>
 
-      <div class="form-grid">
-        <div class="form-field">
-          <label class="form-label" for="description">Cliente *</label>
-          @if (getFieldError('description')) {
-          <span class="field-error">{{ getFieldError('description') }}</span>
-          }
-        </div>
-        <div class="form-field">
-          <label class="form-label" for="description">Equipe *</label>
-          @if (getFieldError('description')) {
-          <span class="field-error">{{ getFieldError('description') }}</span>
-          }
-        </div>
-        <div class="form-field">
-          <label class="form-label" for="description">Descrição *</label>
-          <input
-            type="text"
-            id="description"
-            class="form-input"
-            [class.error]="isFieldInvalid('description')"
-            formControlName="description"
-            placeholder="Digite o descrição do Serviço"
-          />
-          @if (getFieldError('description')) {
-          <span class="field-error">{{ getFieldError('description') }}</span>
-          }
-        </div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label class="form-label" for="customerId">Cliente *</label>
+        <app-search-select
+          placeholder="Selecione o cliente"
+          [options]="customerOptions"
+          [loading]="isCustomerLoading"
+          [selectedValue]="selectedCustomer"
+          (searchChange)="onCustomerSearch($event)"
+          (selectionChange)="onCustomerSelection($event)"
+        >
+        </app-search-select>
+        @if (getFieldError('customerId')) {
+        <span class="field-error">{{ getFieldError('customerId') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="teamId">Equipe *</label>
+        <app-search-select
+          placeholder="Selecione o time"
+          [options]="teamOptions"
+          [loading]="isTeamLoading"
+          [selectedValue]="selectedTeam"
+          (searchChange)="onTeamSearch($event)"
+          (selectionChange)="onTeamSelection($event)"
+        >
+        </app-search-select>
+        @if (getFieldError('teamId')) {
+        <span class="field-error">{{ getFieldError('teamId') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="description">Descrição *</label>
+        <input
+          type="text"
+          id="description"
+          class="form-input"
+          [class.error]="isFieldInvalid('description')"
+          formControlName="description"
+          placeholder="Digite a descrição do Serviço"
+        />
+        @if (getFieldError('description')) {
+        <span class="field-error">{{ getFieldError('description') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="price">Preço *</label>
+        <input
+          type="number"
+          id="price"
+          class="form-input"
+          [class.error]="isFieldInvalid('price')"
+          formControlName="price"
+          placeholder="Digite o preço do serviço"
+          min="1"
+          step="0.01"
+        />
+        @if (getFieldError('price')) {
+        <span class="field-error">{{ getFieldError('price') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="serviceDate">Data do Serviço *</label>
+        <app-single-date-picker
+          [initialDate]="serviceForm.get('serviceDate')?.value"
+          [onDateChanged]="onServiceDateChange.bind(this)"
+        >
+        </app-single-date-picker>
+        @if (getFieldError('serviceDate')) {
+        <span class="field-error">{{ getFieldError('serviceDate') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="serviceDuration">Duração do Serviço *</label>
+        <input
+          type="time"
+          id="serviceDuration"
+          class="form-input"
+          [class.error]="isFieldInvalid('serviceDuration')"
+          formControlName="serviceDuration"
+          step="1"
+        />
+        @if (getFieldError('serviceDuration')) {
+        <span class="field-error">{{ getFieldError('serviceDuration') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="paymentDueDate">Data de Vencimento *</label>
+        <app-single-date-picker
+          [initialDate]="serviceForm.get('paymentDueDate')?.value"
+          [onDateChanged]="onPaymentDueDateChange.bind(this)"
+        >
+        </app-single-date-picker>
+        @if (getFieldError('paymentDueDate')) {
+        <span class="field-error">{{ getFieldError('paymentDueDate') }}</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="status">Status *</label>
+        <select
+          id="status"
+          class="form-input"
+          [class.error]="isFieldInvalid('status')"
+          formControlName="status"
+        >
+          <option value="">Selecione o status</option>
+          <option value="1">Agendado</option>
+          <option value="2">Em Andamento</option>
+          <option value="3">Aguardado Pagamento</option>
+          <option value="4">Pagamento atrasado</option>
+          <option value="5">Concluido</option>
+        </select>
+        @if (getFieldError('status')) {
+        <span class="field-error">{{ getFieldError('status') }}</span>
+        }
       </div>
     </div>
+  </div>
 
-    <div class="form-actions">
-      <button type="button" class="btn-cancel" (click)="goBack()" [disabled]="isLoading()">
-        Cancelar
-      </button>
+  <div class="form-actions">
+    <button type="button" class="btn-cancel" (click)="goBack()" [disabled]="isLoading()">
+      Cancelar
+    </button>
 
-      <button type="submit" class="btn-submit" [disabled]="isLoading() || serviceForm.invalid">
-        @if (isLoading()) {
-        <div class="loading-spinner"></div>
-        Salvando... } @else {
-        {{ isEditMode() ? 'Atualizar Serviço' : 'Criar Serviço' }}
-        }
-      </button>
-    </div>
-  </form>
-</div>
+    <button type="submit" class="btn-submit" [disabled]="isLoading() || serviceForm.invalid">
+      @if (isLoading()) {
+      <div class="loading-spinner"></div>
+      Salvando... } @else {
+      {{ isEditMode() ? 'Atualizar Serviço' : 'Criar Serviço' }}
+      }
+    </button>
+  </div>
+</form>

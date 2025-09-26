@@ -25,6 +25,11 @@ export class Dashboard {
   startDate = signal<Date>(this.getFirstDayOfMonth());
   endDate = signal<Date>(new Date());
 
+  receitaDiariaSignal = computed(() => this.stats()?.receitaDiaria || []);
+  alocacaoPorEquipeSignal = computed(() => this.stats()?.alocacaoPorEquipe || {});
+  servicosPorDataSignal = computed(() => this.stats()?.servicosPorData || []);
+  statusPorServicoSignal = computed(() => this.stats()?.statusServicos || []);
+
   ngOnInit() {
     this.setupHeader();
 

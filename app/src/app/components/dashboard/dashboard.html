@@ -63,7 +63,7 @@
     </div>
     <div class="chart-content">
       <div class="chart-wrapper">
-        <equipes-chart [equipesData]="stats()?.alocacaoPorEquipe || {}"></equipes-chart>
+        <equipes-chart [equipesData]="alocacaoPorEquipeSignal"></equipes-chart>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="chart-content">
-      <receitas-chart [receitaDiaria]="stats()?.receitaDiaria || []"></receitas-chart>
+      <receitas-chart [receitaDiaria]="receitaDiariaSignal"></receitas-chart>
     </div>
   </div>
 
@@ -89,7 +89,7 @@
     </div>
     <div class="chart-content">
       <div class="chart">
-        <status-chart [statusData]="transformedStatusData()"></status-chart>
+        <status-chart [statusData]="statusPorServicoSignal"></status-chart>
       </div>
     </div>
   </div>

@@ -63,3 +63,5 @@ export const deleteCustomerFailure = createAction(
 export const clearError = createAction('[Customer] Clear Error');
 
 export const clearSelectedCustomer = createAction('[Customer] Clear Selected Customer');
+
+export const clearCustomers = createAction('[Customer] Clear Customers');

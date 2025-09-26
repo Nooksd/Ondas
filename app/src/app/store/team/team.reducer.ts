@@ -191,5 +191,10 @@ export const teamReducer = createReducer(
   on(TeamActions.clearSelectedTeam, (state) => ({
     ...state,
     selectedTeam: null,
+  })),
+
+  on(TeamActions.clearTeams, (state) => ({
+    ...state,
+    teams: [],
   }))
 );

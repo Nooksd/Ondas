@@ -50,7 +50,7 @@ export interface SelectOption {
           <div class="loading-item">Carregando...</div>
           } @else if (options().length === 0) {
           <div class="no-results">Nenhum resultado encontrado</div>
-          } @else { @for (option of options(); track option.id) {
+          } @else { @for (option of options().slice(0, 5); track option.id) {
           <div
             class="dropdown-item"
             [class.selected]="selectedValue()?.id === option.id"
@@ -69,7 +69,7 @@ export interface SelectOption {
       .search-select-container {
         position: relative;
         width: 100%;
-        max-width: 300px;
+        background-color: white;
       }
 
       .search-input-wrapper {

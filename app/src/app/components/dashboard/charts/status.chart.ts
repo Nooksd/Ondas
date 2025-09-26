@@ -1,4 +1,5 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
+import { StatusCountDTO } from 'app/store/dashboard/dashboard.state';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -12,11 +13,11 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: [],
 })
 export class StatusChart {
-  @Input() statusData: { statusNome: string; quantidade: number }[] = [];
+  @Input() statusData!: Signal<StatusCountDTO[]>;
 
   chartData = computed<ChartData<'doughnut'>>(() => {
-    const labels = this.statusData.map((item) => item.statusNome);
-    const data = this.statusData.map((item) => item.quantidade);
+    const labels = this.statusData().map((item) => item.statusNome);
+    const data = this.statusData().map((item) => item.quantidade);
     const colors = ['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#c3dafe', '#dbeafe'];
 
     return {

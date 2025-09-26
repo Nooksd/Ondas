@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -17,23 +17,20 @@ import { BaseChartDirective } from 'ng2-charts';
       ></canvas>
     </div>
   `,
-  styleUrls: [],
 })
 export class EquipesChart {
-  @Input() equipesData: Record<string, number> = {};
+  @Input() equipesData!: Signal<Record<string, number>>;
 
   chartHeight = computed(() => {
-    const numBars = Object.keys(this.equipesData).length;
+    const numBars = Object.keys(this.equipesData ? this.equipesData() : {}).length;
     const barHeight = 20;
     const barMargin = 7;
     const padding = 60;
-
     return Math.max(200, numBars * (barHeight + barMargin) + padding);
   });
 
   chartData = computed<ChartData<'bar'>>(() => {
-    const entries = Object.entries(this.equipesData);
-
+    const entries = Object.entries(this.equipesData ? this.equipesData() : {});
     return {
       labels: entries.map(([nome]) => nome),
       datasets: [
@@ -54,41 +51,20 @@ export class EquipesChart {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: {
-        display: false,
-      },
+      x: { display: false },
       y: {
-        ticks: {
-          color: '#2563eb',
-          autoSkip: false,
-          maxRotation: 0,
-          font: {
-            size: 12,
-          },
-        },
-        grid: {
-          display: false,
-        },
+        ticks: { color: '#2563eb', autoSkip: false, maxRotation: 0, font: { size: 12 } },
+        grid: { display: false },
       },
     },
-    layout: {
-      padding: {
-        right: 30,
-        top: 10,
-        bottom: 10,
-      },
-    },
+    layout: { padding: { right: 30, top: 10, bottom: 10 } },
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
-        callbacks: {
-          label: (context) => `${context.parsed.x} horas`,
-        },
+        callbacks: { label: (context) => `${context.parsed.x} horas` },
       },
     },
   };

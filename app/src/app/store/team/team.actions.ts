@@ -97,3 +97,5 @@ export const deactivateTeamFailure = createAction(
 export const clearError = createAction('[Team] Clear Error');
 
 export const clearSelectedTeam = createAction('[Team] Clear Selected Team');
+
+export const clearTeams = createAction('[Team] Clear Teams');

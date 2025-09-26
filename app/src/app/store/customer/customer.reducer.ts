@@ -112,5 +112,10 @@ export const customerReducer = createReducer(
   on(CustomerActions.clearSelectedCustomer, (state) => ({
     ...state,
     selectedCustomer: null,
+  })),
+
+  on(CustomerActions.clearCustomers, (state) => ({
+    ...state,
+    employees: [],
   }))
 );
