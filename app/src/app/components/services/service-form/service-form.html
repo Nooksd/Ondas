@@ -1,1 +1,50 @@
-<p>service-form works!</p>
+<div class="form-container">
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
+    <div class="form-section">
+      <h2 class="section-title">Dados Pessoais</h2>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label" for="description">Cliente *</label>
+          @if (getFieldError('description')) {
+          <span class="field-error">{{ getFieldError('description') }}</span>
+          }
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="description">Equipe *</label>
+          @if (getFieldError('description')) {
+          <span class="field-error">{{ getFieldError('description') }}</span>
+          }
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="description">Descrição *</label>
+          <input
+            type="text"
+            id="description"
+            class="form-input"
+            [class.error]="isFieldInvalid('description')"
+            formControlName="description"
+            placeholder="Digite o descrição do Serviço"
+          />
+          @if (getFieldError('description')) {
+          <span class="field-error">{{ getFieldError('description') }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="goBack()" [disabled]="isLoading()">
+        Cancelar
+      </button>
+
+      <button type="submit" class="btn-submit" [disabled]="isLoading() || serviceForm.invalid">
+        @if (isLoading()) {
+        <div class="loading-spinner"></div>
+        Salvando... } @else {
+        {{ isEditMode() ? 'Atualizar Serviço' : 'Criar Serviço' }}
+        }
+      </button>
+    </div>
+  </form>
+</div>
